@@ -29,7 +29,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;f
 .page{display:none;animation:fadeIn .3s ease;}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.page-title{font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.page-title{font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px;}
 .page-desc{font-size:14px;color:#666;margin-bottom:28px;}
 
 /* Cards */
@@ -44,7 +44,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;f
 /* KPI */
 .kpi-num{font-size:42px;font-weight:800;line-height:1;letter-spacing:-0.03em;}
 .kpi-label{font-size:14px;color:#888;margin-top:6px;}
-.kpi-sub{font-size:14px;color:#aaa;margin-top:4px;}
+.kpi-sub{font-size:13px;color:#aaa;margin-top:6px;}
 
 /* KPI mini cards */
 .kpi-mini{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
@@ -1285,7 +1285,7 @@ function renderTypeC(){
     html+='<div><div style="font-size:15px;font-weight:700;">'+d.name+' '+d.dong+'</div>';
     html+='<div style="font-size:14px;color:#888;margin-top:4px;">'+d.id+' | '+d.defect+' | 보험: '+d.insurance+' ('+d.insurerName+')</div></div>';
     html+='<div style="display:flex;gap:8px;align-items:center;">';
-    html+='<span style="font-weight:700;color:#FF6B35;">'+d.totalAmount+'원</span>';
+    html+='<span style="font-weight:800;color:#FF6B35;letter-spacing:-0.02em;">'+d.totalAmount+'원</span>';
     html+='<span class="badge-status '+stClass+'">'+d.status+'</span>';
     html+='</div></div>';
     // Mini amounts
