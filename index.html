@@ -2,412 +2,1040 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>InsureTech Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APT Insurance — 청구 관리</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--orange:#FF6B35;--bg:#fff;--sidebar:#fafafa;--text:#1a1a1a;--gray:#888;--light:#f5f5f5;--border:#e8e8e8;--green:#22c55e;--blue:#3b82f6;--red:#ef4444}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px;display:flex;min-height:100vh}
-.sidebar{width:240px;min-width:240px;background:var(--sidebar);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s}
-.sidebar .logo{padding:0 24px 28px;font-size:20px;font-weight:800;letter-spacing:-.5px}
-.sidebar .logo span{color:var(--orange)}
-.sidebar nav a{display:block;padding:12px 24px;font-size:14px;color:var(--text);text-decoration:none;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
-.sidebar nav a:hover{background:#f0f0f0}
-.sidebar nav a.active{background:#fff;border-left-color:var(--orange);font-weight:700;color:var(--orange)}
-.main{margin-left:240px;flex:1;padding:32px;min-width:0}
-.hamburger{display:none;position:fixed;top:16px;left:16px;z-index:200;background:var(--orange);color:#fff;border:none;border-radius:8px;width:40px;height:40px;font-size:20px;cursor:pointer}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99}
-@media(max-width:768px){
-.sidebar{transform:translateX(-100%)}
-.sidebar.open{transform:translateX(0)}
-.overlay.open{display:block}
-.main{margin-left:0;padding:20px}
-.hamburger{display:block}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#FF6B35;--pl:#FFF4F0;--p2:#e55c28;
+  --bg:#F8FAFC;--card:#fff;
+  --t:#0F172A;--s:#64748B;--b:#E2E8F0;--b2:#F1F5F9;
+  --green:#059669;--gl:#ECFDF5;
+  --red:#DC2626;--rl:#FEF2F2;
+  --amber:#D97706;--al:#FFFBEB;
+  --navy:#0F172A;
 }
-h1{font-size:26px;font-weight:800;margin-bottom:8px}
-.subtitle{color:var(--gray);margin-bottom:28px;font-size:14px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:28px}
-.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;transition:box-shadow .2s}
-.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.card .label{font-size:13px;color:var(--gray);margin-bottom:6px}
-.card .value{font-size:28px;font-weight:800}
-.card.orange{background:var(--orange);color:#fff;border-color:var(--orange)}
-.card.orange .label{color:rgba(255,255,255,.8)}
-.pill{display:inline-block;padding:6px 16px;border-radius:50px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
-.pill-a{background:#fee2e2;color:#dc2626}
-.pill-b{background:#fef3c7;color:#d97706}
-.pill-c{background:#dbeafe;color:#2563eb}
-.pill-orange{background:var(--orange);color:#fff}
-.pill-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
-.pill-outline.active,.pill-outline:hover{border-color:var(--orange);color:var(--orange)}
-.pill-green{background:#dcfce7;color:#16a34a}
-.pill-gray{background:var(--light);color:var(--gray)}
-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px}
-th{text-align:left;padding:12px 14px;border-bottom:2px solid var(--border);font-weight:700;font-size:13px;color:var(--gray)}
-td{padding:12px 14px;border-bottom:1px solid var(--border)}
-tr:hover td{background:var(--light)}
-.alert-card{background:var(--orange);color:#fff;border-radius:14px;padding:22px;margin-bottom:28px}
-.alert-card .alert-title{font-weight:800;font-size:16px;margin-bottom:12px}
-.alert-card .alert-item{padding:6px 0;font-size:14px;opacity:.95}
-.progress-section{margin-bottom:28px}
-.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-size:14px}
-.progress-row .type-label{width:70px;font-weight:700}
-.bar-wrap{flex:1;display:flex;height:28px;border-radius:14px;overflow:hidden;background:var(--light)}
-.bar-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;min-width:30px}
-.bar-wait{background:#94a3b8}
-.bar-prog{background:var(--orange)}
-.bar-done{background:var(--green)}
-.todo-list{margin-bottom:28px}
-.todo-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
-.todo-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange)}
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.tracker{display:flex;gap:4px;margin-bottom:28px;flex-wrap:wrap}
-.tracker .step{flex:1;min-width:100px;text-align:center;padding:14px 8px;background:var(--light);border-radius:14px;font-size:12px;font-weight:600;color:var(--gray);position:relative}
-.tracker .step.done{background:var(--orange);color:#fff}
-.tracker .step.current{background:#fff;border:2px solid var(--orange);color:var(--orange)}
-.flow-steps{display:flex;gap:4px;margin-bottom:28px;flex-wrap:wrap}
-.flow-steps .fstep{flex:1;min-width:120px;text-align:center;padding:16px 8px;border-radius:14px;font-size:13px;font-weight:700}
-.flow-steps .fstep.f-done{background:var(--green);color:#fff}
-.flow-steps .fstep.f-active{background:var(--orange);color:#fff}
-.flow-steps .fstep.f-wait{background:var(--light);color:var(--gray)}
-.estimation-card{background:var(--light);border-radius:14px;padding:24px;margin-bottom:24px}
-.estimation-card .total{font-size:32px;font-weight:800;color:var(--orange)}
-.estimation-card .split{display:flex;gap:24px;margin-top:12px;font-size:14px}
-.search-box{padding:10px 16px;border:1.5px solid var(--border);border-radius:50px;font-size:14px;width:240px;outline:none;transition:border-color .15s}
-.search-box:focus{border-color:var(--orange)}
-.download-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
-.download-btn{padding:12px 24px;border-radius:50px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
-.download-btn:hover{border-color:var(--orange);color:var(--orange)}
-.deductible-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
-.section{display:none}
-.section.active{display:block}
-.legal-note{background:var(--light);border-left:4px solid var(--orange);border-radius:0 14px 14px 0;padding:16px 20px;margin-bottom:20px;font-size:13px;color:#555}
-.insurance-order{display:flex;gap:12px;margin-bottom:24px}
-.insurance-order .ins-item{flex:1;text-align:center;padding:16px;border-radius:14px;border:1.5px solid var(--border);font-weight:700;font-size:14px}
-.insurance-order .ins-item .order-num{font-size:24px;color:var(--orange);font-weight:800}
-.objection-table{margin-bottom:24px}
-.settings-group{margin-bottom:28px}
-.settings-group h3{font-size:16px;margin-bottom:12px;font-weight:700}
-.settings-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px}
-.toggle{width:44px;height:24px;background:var(--border);border-radius:12px;position:relative;cursor:pointer;transition:background .2s}
-.toggle.on{background:var(--orange)}
-.toggle::after{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s}
-.toggle.on::after{left:22px}
-.field-row{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
-.field-item{display:flex;flex-direction:column;gap:8px;flex:1;min-width:200px}
-.field-item label{font-size:13px;font-weight:700;color:var(--gray)}
-.field-item select,.field-item input[type=text]{padding:10px 16px;border:1.5px solid var(--border);border-radius:50px;font-size:14px;outline:none}
-.field-item select:focus,.field-item input[type=text]:focus{border-color:var(--orange)}
+html,body{height:100%;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;font-size:14px}
+.layout{display:flex;height:100vh;overflow:hidden}
+
+/* ── 사이드바 ── */
+.sidebar{width:220px;background:var(--card);border-right:1px solid var(--b);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--b)}
+.logo-tag{display:inline-block;background:var(--pl);color:var(--p);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:6px;letter-spacing:.3px}
+.logo-title{font-size:13px;font-weight:700;color:var(--t);line-height:1.5;letter-spacing:-.2px}
+.logo-url{font-size:10px;color:var(--s);margin-top:3px}
+.nav-section{padding:8px 0}
+.nav-group-label{font-size:10px;font-weight:600;color:var(--s);padding:8px 16px 4px;text-transform:uppercase;letter-spacing:.6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;color:var(--s);border-left:2px solid transparent;margin:1px 0}
+.nav-item:hover{background:var(--b2);color:var(--t)}
+.nav-item.active{background:var(--pl);color:var(--p);border-left-color:var(--p);font-weight:600}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-sub{padding-left:28px;font-size:12px}
+.sidebar-bottom{margin-top:auto;padding:14px 16px;border-top:1px solid var(--b);font-size:11px;color:var(--s);line-height:1.6}
+
+/* ── 메인 ── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+.topbar{background:var(--card);border-bottom:1px solid var(--b);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:40}
+.breadcrumb{font-size:13px;color:var(--s);display:flex;align-items:center;gap:5px}
+.breadcrumb .cur{color:var(--t);font-weight:600}
+.breadcrumb .sep{color:var(--b)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700}
+.content{padding:22px 24px;flex:1}
+
+/* ── 뷰 ── */
+.view{display:none}.view.active{display:block}
+.page-title{font-size:18px;font-weight:700;letter-spacing:-.4px;margin-bottom:3px}
+.page-sub{font-size:13px;color:var(--s);margin-bottom:18px}
+
+/* ── 공통 카드 ── */
+.card{background:var(--card);border-radius:10px;border:1px solid var(--b)}
+.card-head{padding:14px 18px 12px;font-size:11px;font-weight:700;color:var(--s);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--b)}
+.card-body{padding:16px 18px}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi-card{background:var(--card);border-radius:10px;padding:16px 18px;border:1px solid var(--b);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.kpi-card:hover{border-color:var(--p);box-shadow:0 0 0 3px var(--pl)}
+.kpi-label{font-size:11px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.kpi-num{font-size:28px;font-weight:700;letter-spacing:-.5px}
+.kpi-desc{font-size:11px;color:var(--s);margin-top:4px}
+.kpi-chip{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-top:6px}
+
+/* ── 테이블 ── */
+.table-card{background:var(--card);border-radius:10px;border:1px solid var(--b);overflow:hidden}
+.table-head-row{padding:12px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--b2);font-size:11px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.4px;padding:9px 16px;text-align:left;border-bottom:1px solid var(--b);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#F8F9FF}
+tbody td{padding:11px 16px;font-size:13px;vertical-align:middle}
+
+/* ── 배지 ── */
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:.2px;display:inline-block}
+.ba{background:var(--al);color:var(--amber)}
+.bb{background:var(--rl);color:var(--red)}
+.bc{background:var(--gl);color:var(--green)}
+.status-pill{font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;display:inline-block}
+.s-done{background:var(--gl);color:var(--green)}
+.s-sent{background:var(--pl);color:var(--p)}
+.s-wait{background:var(--al);color:var(--amber)}
+.s-transfer{background:#F0F9FF;color:#0369A1}
+
+/* ── 탭 필터 ── */
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--b);padding:0 18px}
+.tab-btn{padding:9px 14px;font-size:12px;font-weight:600;color:var(--s);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;white-space:nowrap;letter-spacing:-.1px}
+.tab-btn.active{color:var(--p);border-bottom-color:var(--p)}
+
+/* ── 상세 레이아웃 ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.detail-col{display:flex;flex-direction:column;gap:14px}
+
+/* ── 공통 KV ── */
+.kv{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b);font-size:13px}
+.kv:last-child{border-bottom:none}
+.kv-label{color:var(--s)}
+.kv-val{font-weight:600}
+
+/* ── 이유 블록 ── */
+.reason-block{background:var(--b2);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.7}
+.r-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:5px}
+.r-item:last-child{margin-bottom:0}
+.r-dot{width:4px;height:4px;border-radius:50%;background:var(--p);margin-top:8px;flex-shrink:0}
+
+/* ── 판례 ── */
+.case-item{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--b);font-size:12px;align-items:flex-start}
+.case-item:last-child{border-bottom:none}
+.case-num{font-size:10px;font-weight:600;color:var(--p);white-space:nowrap;min-width:130px;padding-top:1px}
+
+/* ── 타임라인 ── */
+.timeline{display:flex;flex-direction:column}
+.tl{display:flex;gap:12px;padding:8px 0;position:relative}
+.tl::before{content:'';position:absolute;left:11px;top:27px;height:calc(100%);width:1px;background:var(--b)}
+.tl:last-child::before{display:none}
+.tl-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:1.5px solid var(--b);background:var(--card)}
+.tl-done{background:var(--green);border-color:var(--green);color:#fff}
+.tl-now{background:var(--p);border-color:var(--p);color:#fff}
+.tl-wait{background:var(--b2);color:var(--s)}
+.tl-title{font-size:13px;font-weight:600;margin-bottom:1px}
+.tl-time{font-size:11px;color:var(--s)}
+
+/* ── 버튼 ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .12s;letter-spacing:-.1px;white-space:nowrap}
+.btn-p{background:var(--p);color:#fff}
+.btn-p:hover{background:var(--p2)}
+.btn-s{background:var(--bg);color:var(--t);border:1px solid var(--b)!important}
+.btn-s:hover{background:var(--b2)}
+.btn-g{background:var(--green);color:#fff}
+.btn-g:hover{background:#047857}
+.btn-d{background:var(--rl);color:var(--red);border:1px solid #fca5a5!important}
+.btn-d:hover{background:#FEE2E2}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* ── 소송 단계 트래커 ── */
+.stage-tracker{background:var(--card);border-radius:10px;border:1px solid var(--b);padding:16px 20px;margin-bottom:14px}
+.stage-label{font-size:11px;font-weight:700;color:var(--s);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.stages{display:flex;align-items:center;gap:0}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.stage::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--b);z-index:0}
+.stage:last-child::after{display:none}
+.stage-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--b);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--s);z-index:1;position:relative;transition:all .2s}
+.stage-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.stage-dot.now{background:var(--p);border-color:var(--p);color:#fff;box-shadow:0 0 0 4px var(--pl)}
+.stage-name{font-size:10px;color:var(--s);margin-top:6px;text-align:center;line-height:1.4;letter-spacing:-.1px}
+.stage-name.done{color:var(--green);font-weight:600}
+.stage-name.now{color:var(--p);font-weight:700}
+
+/* ── 면책 관리 상태 ── */
+.status-flow{display:flex;gap:0;background:var(--b2);border-radius:8px;padding:4px;margin-bottom:12px}
+.sf-item{flex:1;padding:7px 6px;text-align:center;border-radius:6px;font-size:11px;font-weight:500;color:var(--s);cursor:pointer;transition:all .15s}
+.sf-item.active{background:var(--card);color:var(--p);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* ── 이의신청 리스트 ── */
+.obj-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--b)}
+.obj-item:last-child{border-bottom:none}
+.obj-num{font-size:10px;font-weight:600;color:var(--s);min-width:70px;margin-top:2px}
+.obj-content{flex:1;min-width:0}
+.obj-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.obj-sub{font-size:11px;color:var(--s)}
+
+/* ── 네비게이션 화살표 ── */
+.nav-arrows{display:flex;align-items:center;gap:8px}
+.arrow-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-size:12px;font-weight:500;color:var(--s);border:1px solid var(--b);background:var(--card);cursor:pointer;transition:all .12s}
+.arrow-btn:hover{border-color:var(--p);color:var(--p)}
+.claim-counter{font-size:12px;color:var(--s);padding:0 4px}
+
+/* ── 사진 플레이스홀더 ── */
+.photo-ph{background:var(--b2);border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.photo-ph .inner{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--s)}
+
+/* ── 적산 테이블 ── */
+.est-total td{font-weight:700;font-size:14px;background:var(--pl)}
+.est-deduct td{color:var(--red)}
+.cb{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--b);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:9px;transition:all .12s;vertical-align:middle;flex-shrink:0}
+.cb.on{background:var(--p);border-color:var(--p);color:#fff}
+.striked{color:#9CA3AF;text-decoration:line-through}
+
+/* ── 승인 라디오 ── */
+.radio-opt{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;margin-bottom:7px;font-size:13px;font-weight:500;transition:all .12s}
+.radio-opt:hover{border-color:var(--p)}
+.radio-opt.sel{border-color:var(--p);background:var(--pl)}
+.r-circle{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--b);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.r-circle.on{border-color:var(--p);background:var(--p)}
+.r-circle.on::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+
+/* ── 차트 바 ── */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-lbl{font-size:11px;font-weight:500;color:var(--s);width:64px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:16px;background:var(--b2);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:flex-end;padding-right:5px;font-size:9px;font-weight:700;color:#fff}
+.bar-val{font-size:11px;font-weight:600;width:36px;text-align:right;flex-shrink:0;color:var(--t)}
+
+/* ── 모달 ── */
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:500;display:none;align-items:center;justify-content:center}
+.modal-bg.on{display:flex}
+.modal{background:var(--card);border-radius:12px;padding:28px 28px 24px;max-width:380px;width:90%;border:1px solid var(--b)}
+.modal-title{font-size:16px;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--s);line-height:1.6;margin-bottom:20px}
+.modal-btn-row{display:flex;justify-content:flex-end;gap:8px}
+
+/* ── 토스트 ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.88);color:#fff;font-size:12px;font-weight:600;padding:9px 18px;border-radius:6px;z-index:600;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
 </style>
 </head>
 <body>
-<button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
-<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-<div class="sidebar" id="sidebar">
-<div class="logo">Insure<span>Tech</span></div>
-<nav id="nav">
-<a class="active" onclick="go('dashboard')">대시보드</a>
-<a onclick="go('all')">전체 접수 관리</a>
-<a onclick="go('typeA')">TYPE A 관리</a>
-<a onclick="go('typeB')">TYPE B 관리</a>
-<a onclick="go('typeC')">TYPE C 관리</a>
-<a onclick="go('cost')">품셈/단가 관리</a>
-<a onclick="go('inspect')">현장조사</a>
-<a onclick="go('settings')">설정</a>
-</nav>
-</div>
-<div class="main">
+<div class="layout">
 
-<!-- 대시보드 -->
-<div class="section active" id="s-dashboard">
-<h1>대시보드</h1>
-<p class="subtitle">하자접수 현황 종합</p>
-<div class="cards">
-<div class="card"><div class="label">전체 접수</div><div class="value">58</div></div>
-<div class="card"><div class="label">입주민 (전유부)</div><div class="value">35</div></div>
-<div class="card"><div class="label">관리사무소 (공용부)</div><div class="value">23</div></div>
-<div class="card"><div class="label">TYPE A (소송전환)</div><div class="value" style="color:#dc2626">5</div></div>
-<div class="card"><div class="label">TYPE B (면책통보)</div><div class="value" style="color:#d97706">12</div></div>
-<div class="card"><div class="label">TYPE C (AI적산)</div><div class="value" style="color:#2563eb">41</div></div>
-</div>
-<div class="alert-card">
-<div class="alert-title">AI 알림</div>
-<div class="alert-item">- 3건 긴급 현장조사 필요</div>
-<div class="alert-item">- 2건 면책 의견서 기한 임박</div>
-<div class="alert-item">- 품셈 단가 1건 변동 감지</div>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">TYPE별 처리 현황</h3>
-<div class="progress-section">
-<div class="progress-row"><span class="type-label pill pill-a">TYPE A</span><div class="bar-wrap"><div class="bar-seg bar-wait" style="width:40%">대기 2</div><div class="bar-seg bar-prog" style="width:40%">진행 2</div><div class="bar-seg bar-done" style="width:20%">완료 1</div></div></div>
-<div class="progress-row"><span class="type-label pill pill-b">TYPE B</span><div class="bar-wrap"><div class="bar-seg bar-wait" style="width:25%">대기 3</div><div class="bar-seg bar-prog" style="width:42%">진행 5</div><div class="bar-seg bar-done" style="width:33%">완료 4</div></div></div>
-<div class="progress-row"><span class="type-label pill pill-c">TYPE C</span><div class="bar-wrap"><div class="bar-seg bar-wait" style="width:20%">대기 8</div><div class="bar-seg bar-prog" style="width:36%">진행 15</div><div class="bar-seg bar-done" style="width:44%">완료 18</div></div></div>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">최근 접수</h3>
-<div style="overflow-x:auto">
-<table>
-<tr><th>번호</th><th>유형</th><th>위치</th><th>출처</th><th>AI TYPE</th><th>상태</th><th>날짜</th></tr>
-<tr><td>HD-058</td><td>누수</td><td>101동 1502호</td><td>입주민</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-green">접수</span></td><td>2026-03-28</td></tr>
-<tr><td>HD-057</td><td>화재</td><td>103동 지하주차장</td><td>관리사무소</td><td><span class="pill pill-a">A</span></td><td><span class="pill pill-orange">조사중</span></td><td>2026-03-27</td></tr>
-<tr><td>HD-056</td><td>파손</td><td>102동 옥상</td><td>관리사무소</td><td><span class="pill pill-b">B</span></td><td><span class="pill pill-gray">대기</span></td><td>2026-03-27</td></tr>
-<tr><td>HD-055</td><td>누수</td><td>101동 803호</td><td>입주민</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-green">접수</span></td><td>2026-03-26</td></tr>
-<tr><td>HD-054</td><td>누수</td><td>104동 201호</td><td>입주민</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-orange">조사중</span></td><td>2026-03-26</td></tr>
-</table>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">오늘의 할일</h3>
-<div class="todo-list">
-<label class="todo-item"><input type="checkbox"> HD-057 화재현장 현장조사 출동</label>
-<label class="todo-item"><input type="checkbox" checked> HD-052 면책통보서 발송</label>
-<label class="todo-item"><input type="checkbox"> HD-048 AI 적산 결과 검토</label>
-<label class="todo-item"><input type="checkbox"> 2026년 상반기 품셈단가 업데이트</label>
-<label class="todo-item"><input type="checkbox" checked> HD-045 구상권 청구서 송부</label>
-</div>
+  <!-- ── 사이드바 ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-tag">AI 청구 관리</div>
+      <div class="logo-title">APT Insurance</div>
+      <div class="logo-url">apt-insurance.ai</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-group-label">Overview</div>
+      <div class="nav-item active" id="nav-dashboard" onclick="go('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/></svg>
+        대시보드
+      </div>
+      <div class="nav-group-label">청구 관리</div>
+      <div class="nav-item" id="nav-claims" onclick="go('claims')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.6"/></svg>
+        청구 목록
+      </div>
+      <div class="nav-item nav-sub" id="nav-type-a" onclick="go('type-a')">TYPE A — 하자소송 이관</div>
+      <div class="nav-item nav-sub" id="nav-type-b" onclick="go('type-b')">TYPE B — 면책</div>
+      <div class="nav-item nav-sub" id="nav-type-c" onclick="go('type-c')">TYPE C — 지급</div>
+      <div class="nav-item" id="nav-estimation" onclick="go('estimation')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 7h6M9 11h6M9 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/></svg>
+        적산 결과 검토
+      </div>
+      <div class="nav-item" id="nav-approve" onclick="go('approve')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
+        손해사정사 승인
+      </div>
+      <div class="nav-item" id="nav-fieldsurvey" onclick="go('fieldsurvey')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        현장조사 관리
+      </div>
+      <div class="nav-item" id="nav-pricebook" onclick="go('pricebook')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h4"/></svg>
+        품셈/단가 관리
+      </div>
+      <div class="nav-item" id="nav-insurance" onclick="go('insurance')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        보험 연계
+      </div>
+      <div class="nav-item" id="nav-subrogation" onclick="go('subrogation')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M21 3L9 15M4 11v5a2 2 0 002 2h5"/></svg>
+        구상권 관리
+      </div>
+      <div class="nav-item" id="nav-opinion" onclick="go('opinion')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="1.6"/><path d="M14 2v6h6M16 13H8M16 17H8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        법률 의견서
+      </div>
+    </div>
+    <div class="sidebar-bottom">APT Insurance</div>
+  </aside>
+
+  <!-- ── 메인 ── -->
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb" id="breadcrumb"><span class="cur">대시보드</span></div>
+      <div class="topbar-right">
+        <span style="font-size:12px;color:var(--s)">김지수 손해사정사</span>
+        <div class="avatar">김</div>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- ── D1: 대시보드 ── -->
+      <div class="view active" id="v-dashboard">
+        <div class="page-title">청구 관리 대시보드</div>
+        <div class="page-sub">2026년 3월 · 전체 단지 기준</div>
+        <div class="kpi-grid">
+          <div class="kpi-card" onclick="go('claims')">
+            <div class="kpi-label">이번 달 전체 청구</div>
+            <div class="kpi-num">247</div>
+            <div class="kpi-desc">전월 대비 +12건</div>
+          </div>
+          <div class="kpi-card" onclick="go('type-a')">
+            <div class="kpi-label">TYPE A — 하자소송 이관</div>
+            <div class="kpi-num" style="color:var(--amber)">38</div>
+            <div class="kpi-desc">시공사 청구 증거자료 등록</div>
+            <div class="kpi-chip" style="background:var(--al);color:var(--amber)">소송 진행 중</div>
+          </div>
+          <div class="kpi-card" onclick="go('type-b')">
+            <div class="kpi-label">TYPE B — 면책 처리</div>
+            <div class="kpi-num" style="color:var(--red)">61</div>
+            <div class="kpi-desc">보험금 직접 차단</div>
+            <div class="kpi-chip" style="background:var(--rl);color:var(--red)">차단 건</div>
+          </div>
+          <div class="kpi-card" onclick="go('type-c')">
+            <div class="kpi-label">TYPE C — AI 산출</div>
+            <div class="kpi-num" style="color:var(--green)">148</div>
+            <div class="kpi-desc">평균 산출 7분 22초</div>
+            <div class="kpi-chip" style="background:var(--gl);color:var(--green)">AI 처리</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 300px;gap:14px">
+          <div class="table-card">
+            <div class="table-head-row"><span style="font-size:13px;font-weight:600">최근 청구 내역</span><button class="btn btn-s" onclick="go('claims')">전체 보기</button></div>
+            <table>
+              <thead><tr><th>청구번호</th><th>단지·내용</th><th>접수일</th><th>유형</th><th>신뢰도</th><th>상태</th></tr></thead>
+              <tbody>
+                <tr onclick="go('type-c')"><td style="color:var(--s);font-size:11px">CLM-0247</td><td><div style="font-weight:600">헬리오시티 102동</div><div style="font-size:11px;color:var(--s)">급배수 누수</div></td><td style="font-size:12px;color:var(--s)">3/14</td><td><span class="badge bc">TYPE C</span></td><td style="font-weight:600;color:var(--green)">97.1%</td><td><span class="status-pill s-done">적산 완료</span></td></tr>
+                <tr onclick="go('type-a')"><td style="color:var(--s);font-size:11px">CLM-0246</td><td><div style="font-weight:600">마포래미안</div><div style="font-size:11px;color:var(--s)">외벽 수직 균열</div></td><td style="font-size:12px;color:var(--s)">3/13</td><td><span class="badge ba">TYPE A</span></td><td style="font-weight:600;color:var(--green)">91.2%</td><td><span class="status-pill s-transfer">소송 이관</span></td></tr>
+                <tr onclick="go('type-b')"><td style="color:var(--s);font-size:11px">CLM-0245</td><td><div style="font-weight:600">잠실파크리오</div><div style="font-size:11px;color:var(--s)">세탁기 배수 과실</div></td><td style="font-size:12px;color:var(--s)">3/13</td><td><span class="badge bb">TYPE B</span></td><td style="font-weight:600;color:var(--green)">95.8%</td><td><span class="status-pill s-sent">의견서 발송</span></td></tr>
+                <tr onclick="go('type-c')"><td style="color:var(--s);font-size:11px">CLM-0244</td><td><div style="font-weight:600">은평뉴타운</div><div style="font-size:11px;color:var(--s)">엘리베이터 사고</div></td><td style="font-size:12px;color:var(--s)">3/12</td><td><span class="badge bc">TYPE C</span></td><td style="font-weight:600;color:var(--green)">98.3%</td><td><span class="status-pill s-wait">승인 대기</span></td></tr>
+                <tr onclick="go('type-a')"><td style="color:var(--s);font-size:11px">CLM-0243</td><td><div style="font-weight:600">송도더샵</div><div style="font-size:11px;color:var(--s)">시공 하자 침하</div></td><td style="font-size:12px;color:var(--s)">3/12</td><td><span class="badge ba">TYPE A</span></td><td style="font-weight:600;color:var(--amber)">88.7%</td><td><span class="status-pill s-transfer">소송 이관</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="card">
+              <div class="card-head">TYPE별 손해율 절감</div>
+              <div class="card-body">
+                <div class="bar-row"><div class="bar-lbl">TYPE A</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--amber)">15%</div></div><div class="bar-val">15%</div></div>
+                <div class="bar-row"><div class="bar-lbl">TYPE B</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--red)">25%</div></div><div class="bar-val">25%</div></div>
+                <div class="bar-row"><div class="bar-lbl">TYPE C</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--green)">60%</div></div><div class="bar-val">60%</div></div>
+                <div style="background:var(--b2);border-radius:8px;padding:10px 12px;margin-top:10px">
+                  <div style="font-size:11px;color:var(--s);margin-bottom:7px">이번 달 손해율 절감</div>
+                  <div style="display:flex;gap:12px">
+                    <div><div style="font-size:18px;font-weight:700;color:var(--amber)">-16.8%</div><div style="font-size:10px;color:var(--s)">A+B 직접 차단</div></div>
+                    <div style="width:1px;background:var(--b)"></div>
+                    <div><div style="font-size:18px;font-weight:700;color:var(--green)">-11.2%</div><div style="font-size:10px;color:var(--s)">C 과다견적 방어</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── D2: 청구 목록 ── -->
+      <div class="view" id="v-claims">
+        <!-- 헤더 + 검색 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px">
+          <div>
+            <div class="page-title" style="margin-bottom:2px">청구 목록</div>
+            <div class="page-sub" style="margin-bottom:0">이번 달 247건 · 승인 대기 <span style="color:var(--red);font-weight:700">3건</span></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="position:relative">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--s)"><circle cx="11" cy="11" r="7" stroke="#94A3B8" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input id="claimSearch" type="text" placeholder="단지명·청구번호·내용 검색" oninput="searchClaims(this.value)" style="padding:7px 12px 7px 32px;border:1px solid var(--b);border-radius:7px;font-size:13px;font-family:inherit;width:220px;outline:none;background:var(--card);color:var(--t);transition:border .12s" onfocus="this.style.borderColor='var(--p)'" onblur="this.style.borderColor='var(--b)'">
+            </div>
+            <select id="sortSelect" onchange="sortClaims(this.value)" style="padding:7px 10px;border:1px solid var(--b);border-radius:7px;font-size:12px;font-family:inherit;background:var(--card);color:var(--t);outline:none;cursor:pointer">
+              <option value="date">접수일 최신순</option>
+              <option value="conf">신뢰도 높은순</option>
+              <option value="status">상태별</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 분할 레이아웃: 목록 + 미리보기 -->
+        <div id="claimsLayout" style="display:flex;gap:14px;height:calc(100vh - 160px)">
+
+          <!-- 왼쪽: 목록 -->
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:0;background:var(--card);border-radius:10px;border:1px solid var(--b);overflow:hidden">
+            <!-- 탭 필터 -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--b);flex-shrink:0">
+              <div class="tab-row" style="padding:0;border-bottom:none">
+                <button class="tab-btn active" onclick="filterClaims('all',this)">전체 <span style="font-size:10px;background:var(--b2);padding:1px 6px;border-radius:10px;margin-left:3px">247</span></button>
+                <button class="tab-btn" onclick="filterClaims('a',this)">TYPE A <span style="font-size:10px;background:var(--al);color:var(--amber);padding:1px 6px;border-radius:10px;margin-left:3px">38</span></button>
+                <button class="tab-btn" onclick="filterClaims('b',this)">TYPE B <span style="font-size:10px;background:var(--rl);color:var(--red);padding:1px 6px;border-radius:10px;margin-left:3px">61</span></button>
+                <button class="tab-btn" onclick="filterClaims('c',this)">TYPE C <span style="font-size:10px;background:var(--gl);color:var(--green);padding:1px 6px;border-radius:10px;margin-left:3px">148</span></button>
+                <button class="tab-btn" onclick="filterClaims('wait',this)">승인 대기 <span style="font-size:10px;background:var(--rl);color:var(--red);padding:1px 6px;border-radius:10px;margin-left:3px">3</span></button>
+                <button class="tab-btn" onclick="filterClaims('done',this)">완료</button>
+              </div>
+            </div>
+
+            <!-- 테이블 헤더 -->
+            <div style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:8px 16px;background:var(--b2);font-size:10px;font-weight:700;color:var(--s);text-transform:uppercase;letter-spacing:.4px;flex-shrink:0;border-bottom:1px solid var(--b)">
+              <span>청구번호</span><span>단지·내용</span><span>접수일</span><span>신뢰도</span><span>상태</span><span style="text-align:right">액션</span>
+            </div>
+
+            <!-- 행 목록 -->
+            <div style="overflow-y:auto;flex:1" id="claimsBody">
+
+              <!-- TYPE C · 승인 대기 (우선 강조) -->
+              <div class="cl-row" data-type="c" data-status="wait" data-search="clm-0244 은평뉴타운 엘리베이터 낙상" onclick="showPreview('clm0244')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;background:#FFFBEB;border-left:3px solid var(--red)">
+                <div style="font-size:11px;color:var(--s)">CLM-0244</div>
+                <div><div style="font-weight:600;font-size:13px">은평뉴타운 관리동</div><div style="font-size:11px;color:var(--s)">엘리베이터 낙상 사고</div></div>
+                <div style="font-size:12px;color:var(--s)">03-12</div>
+                <div style="font-weight:700;color:var(--green);font-size:13px">98.3%</div>
+                <div><span class="status-pill s-wait">승인 대기</span></div>
+                <div style="text-align:right"><button class="btn btn-g" onclick="event.stopPropagation();go('approve')" style="padding:4px 10px;font-size:11px">지금 승인</button></div>
+              </div>
+
+              <!-- TYPE C -->
+              <div class="cl-row" data-type="c" data-status="done" data-search="clm-0247 헬리오시티 천장 누수" onclick="showPreview('clm0247')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;border-left:3px solid var(--green)">
+                <div style="font-size:11px;color:var(--s)">CLM-0247</div>
+                <div><div style="font-weight:600;font-size:13px">헬리오시티 102동 1204호</div><div style="font-size:11px;color:var(--s)">천장 급배수 누수</div></div>
+                <div style="font-size:12px;color:var(--s)">03-14</div>
+                <div style="font-weight:700;color:var(--green);font-size:13px">97.1%</div>
+                <div><span class="status-pill s-done">적산 완료</span></div>
+                <div style="text-align:right"><button class="btn btn-p" onclick="event.stopPropagation();go('type-c')" style="padding:4px 10px;font-size:11px">상세</button></div>
+              </div>
+
+              <!-- TYPE A -->
+              <div class="cl-row" data-type="a" data-status="transfer" data-search="clm-0246 마포래미안 외벽 균열" onclick="showPreview('clm0246')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;border-left:3px solid var(--amber)">
+                <div style="font-size:11px;color:var(--s)">CLM-0246</div>
+                <div><div style="font-weight:600;font-size:13px">마포래미안 803호</div><div style="font-size:11px;color:var(--s)">외벽 수직 관통균열</div></div>
+                <div style="font-size:12px;color:var(--s)">03-13</div>
+                <div style="font-weight:700;color:var(--green);font-size:13px">91.2%</div>
+                <div><span class="status-pill s-transfer">소송 이관</span></div>
+                <div style="text-align:right"><button class="btn btn-s" onclick="event.stopPropagation();go('type-a')" style="padding:4px 10px;font-size:11px">증거 패키지</button></div>
+              </div>
+
+              <!-- TYPE B -->
+              <div class="cl-row" data-type="b" data-status="sent" data-search="clm-0245 잠실파크리오 세탁기 배수" onclick="showPreview('clm0245')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;border-left:3px solid var(--red)">
+                <div style="font-size:11px;color:var(--s)">CLM-0245</div>
+                <div><div style="font-weight:600;font-size:13px">잠실파크리오 1205호</div><div style="font-size:11px;color:var(--s)">세탁기 배수 연결 불량</div></div>
+                <div style="font-size:12px;color:var(--s)">03-13</div>
+                <div style="font-weight:700;color:var(--green);font-size:13px">95.8%</div>
+                <div><span class="status-pill s-sent">의견서 발송</span></div>
+                <div style="text-align:right"><button class="btn btn-s" onclick="event.stopPropagation();go('type-b')" style="padding:4px 10px;font-size:11px">이의신청 확인</button></div>
+              </div>
+
+              <!-- TYPE A 2 -->
+              <div class="cl-row" data-type="a" data-status="transfer" data-search="clm-0243 송도더샵 시공 하자 침하" onclick="showPreview('clm0243')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;border-left:3px solid var(--amber)">
+                <div style="font-size:11px;color:var(--s)">CLM-0243</div>
+                <div><div style="font-weight:600;font-size:13px">송도더샵 A동 201호</div><div style="font-size:11px;color:var(--s)">시공 하자 — 바닥 침하</div></div>
+                <div style="font-size:12px;color:var(--s)">03-12</div>
+                <div style="font-weight:700;color:var(--amber);font-size:13px">88.7%</div>
+                <div><span class="status-pill s-transfer">소송 이관</span></div>
+                <div style="text-align:right"><button class="btn btn-s" onclick="event.stopPropagation();go('type-a')" style="padding:4px 10px;font-size:11px">증거 패키지</button></div>
+              </div>
+
+              <!-- TYPE B 완료 -->
+              <div class="cl-row" data-type="b" data-status="done" data-search="clm-0242 분당파크뷰 바닥재 파손" onclick="showPreview('clm0242')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;border-left:3px solid var(--b);opacity:.75">
+                <div style="font-size:11px;color:var(--s)">CLM-0242</div>
+                <div><div style="font-weight:600;font-size:13px">분당파크뷰 502호</div><div style="font-size:11px;color:var(--s)">바닥재 파손</div></div>
+                <div style="font-size:12px;color:var(--s)">03-11</div>
+                <div style="font-weight:700;color:var(--green);font-size:13px">93.1%</div>
+                <div><span class="status-pill s-done">처리 완료</span></div>
+                <div style="text-align:right"><button class="btn btn-s" onclick="event.stopPropagation();go('opinion')" style="padding:4px 10px;font-size:11px">의견서</button></div>
+              </div>
+
+              <!-- TYPE C 완료 2 -->
+              <div class="cl-row" data-type="c" data-status="done" data-search="clm-0241 래미안 원베일리 누수" onclick="showPreview('clm0247')" style="display:grid;grid-template-columns:90px 1fr 80px 80px 120px 90px;padding:11px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s;align-items:center;border-left:3px solid var(--green);opacity:.75">
+                <div style="font-size:11px;color:var(--s)">CLM-0241</div>
+                <div><div style="font-weight:600;font-size:13px">래미안 원베일리 301호</div><div style="font-size:11px;color:var(--s)">욕실 배관 누수</div></div>
+                <div style="font-size:12px;color:var(--s)">03-10</div>
+                <div style="font-weight:700;color:var(--green);font-size:13px">99.1%</div>
+                <div><span class="status-pill s-done">지급 완료</span></div>
+                <div style="text-align:right"><button class="btn btn-s" onclick="event.stopPropagation();" style="padding:4px 10px;font-size:11px">내역서</button></div>
+              </div>
+
+              <div id="noResult" style="display:none;text-align:center;padding:48px 24px;color:var(--s)">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="margin:0 auto 10px;display:block;opacity:.3"><circle cx="11" cy="11" r="7" stroke="#64748B" stroke-width="1.5"/><path d="M20 20l-3-3" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/></svg>
+                검색 결과가 없습니다
+              </div>
+            </div>
+
+            <!-- 하단 요약 -->
+            <div style="padding:9px 16px;background:var(--b2);border-top:1px solid var(--b);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;font-size:11px;color:var(--s)">
+              <span id="listCount">전체 247건 표시 중</span>
+              <div style="display:flex;gap:16px">
+                <span>TYPE A <strong style="color:var(--amber)">38건</strong></span>
+                <span>TYPE B <strong style="color:var(--red)">61건</strong></span>
+                <span>TYPE C <strong style="color:var(--green)">148건</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 오른쪽: 미리보기 패널 -->
+          <div id="previewPanel" style="width:300px;flex-shrink:0;background:var(--card);border-radius:10px;border:1px solid var(--b);overflow:hidden;display:flex;flex-direction:column;transition:all .2s">
+
+            <!-- 기본 빈 상태 -->
+            <div id="previewEmpty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center;color:var(--s)">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="opacity:.25;margin-bottom:12px"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="#64748B" stroke-width="1.5"/></svg>
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">청구 건을 선택하세요</div>
+              <div style="font-size:12px;line-height:1.6">행을 클릭하면<br>요약 정보가 여기 표시됩니다</div>
+            </div>
+
+            <!-- 미리보기 내용 (동적) -->
+            <div id="previewContent" style="display:none;flex:1;overflow-y:auto;flex-direction:column">
+              <div style="padding:14px 16px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div id="pv-badge" style="margin-bottom:5px"></div>
+                  <div id="pv-title" style="font-size:14px;font-weight:700;letter-spacing:-.3px;line-height:1.4"></div>
+                  <div id="pv-num" style="font-size:11px;color:var(--s);margin-top:2px"></div>
+                </div>
+                <button onclick="closePreview()" style="border:none;background:var(--bg);border-radius:5px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--s);flex-shrink:0">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+              <div style="padding:12px 16px;flex:1">
+                <div id="pv-body"></div>
+              </div>
+              <div style="padding:12px 16px;border-top:1px solid var(--b);display:flex;gap:7px" id="pv-actions"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── D3: TYPE A ── -->
+      <div class="view" id="v-type-a">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <span class="badge ba" style="font-size:11px;padding:3px 10px">TYPE A — 하자소송 증거자료</span>
+              <span style="background:var(--al);color:var(--amber);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px">보험 면책 · 건설사 청구</span>
+              <span style="font-size:11px;color:var(--s)">CLM-2026-0246</span>
+            </div>
+            <div class="page-title">마포래미안 외벽 수직 관통균열</div>
+            <div style="font-size:13px;color:var(--s)">하자소송 증거자료 등록 / 접수: 2026-03-13 14:05 / 담당: 김지수</div>
+          </div>
+          <div class="nav-arrows">
+            <button class="arrow-btn" onclick="showToast('이전 TYPE A 건 — CLM-0243')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>이전 건
+            </button>
+            <span class="claim-counter">2 / 38</span>
+            <button class="arrow-btn" onclick="showToast('다음 TYPE A 건 — CLM-0238')">
+              다음 건<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 보험 면책 + 하자소송 안내 배너 -->
+        <div style="background:var(--al);border:1px solid #fde68a;border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#D97706" stroke-width="1.8"/><path d="M12 8v4M12 16h.01" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:4px">화재보험 면책 사항 — 시공상 하자</div>
+            <div style="font-size:12px;color:var(--t);line-height:1.7">화재보험 보통약관 면책 조항: <strong>"설계·재료·공사상의 결함으로 생긴 손해는 보상하지 않습니다."</strong><br>본 건은 <strong>공동주택관리법 제37조</strong>에 따라 시공사에 하자담보책임을 청구합니다. AI가 수집한 사진·측정값은 소송 증거자료로 APT Insurance 소송팀에 전달됩니다.</div>
+          </div>
+        </div>
+
+        <!-- 하자소송 진행 단계 트래커 -->
+        <div class="stage-tracker">
+          <div class="stage-label">단지 하자소송 진행 단계 — 마포래미안</div>
+          <div class="stages">
+            <div class="stage"><div class="stage-dot done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div class="stage-name done">AI 하자<br>분류</div></div>
+            <div class="stage"><div class="stage-dot done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div class="stage-name done">증거자료<br>패키징</div></div>
+            <div class="stage"><div class="stage-dot now" style="font-size:12px;font-weight:700">3</div><div class="stage-name now">소송<br>제기</div></div>
+            <div class="stage"><div class="stage-dot" style="font-size:12px;font-weight:700;color:var(--s)">4</div><div class="stage-name">변론<br>진행</div></div>
+            <div class="stage"><div class="stage-dot" style="font-size:12px;font-weight:700;color:var(--s)">5</div><div class="stage-name">판결·<br>합의</div></div>
+            <div class="stage"><div class="stage-dot" style="font-size:12px;font-weight:700;color:var(--s)">6</div><div class="stage-name">건설사<br>배상금 수령</div></div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">증거 사진 (5장 / AI Annotated)</div>
+              <div class="card-body" style="padding:12px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <div class="photo-ph" style="aspect-ratio:4/3;grid-column:span 2;background:#d8e4ed;border:1.5px dashed var(--amber)">
+                    <div class="inner">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#64748B" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#64748B" stroke-width="1.5"/></svg>
+                      <span style="font-size:11px;color:var(--s)">전경 — 소송 증거 등록</span>
+                    </div>
+                    <div style="position:absolute;bottom:8px;left:8px;background:var(--amber);color:#fff;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600">균열 측정 0.8mm</div>
+                    <div style="position:absolute;top:8px;right:8px;background:var(--green);color:#fff;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:600">증거 등록 완료</div>
+                  </div>
+                  <div class="photo-ph" style="aspect-ratio:4/3;background:#cdd9e5"><div class="inner"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#64748B" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#64748B" stroke-width="1.5"/></svg><span style="font-size:11px;color:var(--s)">근접 1</span></div></div>
+                  <div class="photo-ph" style="aspect-ratio:4/3;background:#c2cfda"><div class="inner"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#64748B" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#64748B" stroke-width="1.5"/></svg><span style="font-size:11px;color:var(--s)">근접 2</span></div></div>
+                </div>
+                <div style="margin-top:8px;font-size:11px;color:var(--s)">사진 5장 · AI 측정값 · 위치 메타데이터 포함 / 소송 증거 패키지 자동 생성</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">하자담보책임 정보 (공동주택관리법 제36조)</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div class="kv"><span class="kv-label">시공사 (청구 상대방)</span><span class="kv-val">○○건설</span></div>
+                <div class="kv"><span class="kv-label">준공일</span><span class="kv-val">2018년 11월</span></div>
+                <div class="kv"><span class="kv-label">하자 유형</span><span class="kv-val">주요 구조부 균열 (10년 담보)</span></div>
+                <div class="kv"><span class="kv-label">잔여 담보 기간</span><span class="kv-val" style="color:var(--green)">5년 1개월 — 소송 적격</span></div>
+                <div class="kv"><span class="kv-label">단지 합산 청구 예정액</span><span class="kv-val" style="color:var(--p);font-size:15px">약 38억원</span></div>
+                <div class="kv" style="border-bottom:none"><span class="kv-label">본 건 기여 예상액</span><span class="kv-val" style="color:var(--amber)">약 38,000,000원</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">AI 하자 분류 근거 — 신뢰도 91.2%</div>
+              <div class="card-body">
+                <div style="display:flex;gap:8px;margin-bottom:12px">
+                  <span class="badge ba">시공상 하자</span>
+                  <span style="background:var(--pl);color:var(--p);font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px">신뢰도 91.2%</span>
+                  <span style="background:var(--al);color:var(--amber);font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px">보험 면책</span>
+                </div>
+                <div class="reason-block">
+                  <div class="r-item"><div class="r-dot" style="background:var(--amber)"></div><div>수직 관통균열 폭 0.8mm — 건설기준 허용치(0.3mm) 2.7배 초과</div></div>
+                  <div class="r-item"><div class="r-dot" style="background:var(--amber)"></div><div>균열 방향·패턴이 전단 변형 구조적 하자와 일치 — 외부 충격 아님</div></div>
+                  <div class="r-item"><div class="r-dot" style="background:var(--amber)"></div><div>건축 4.9년차, 하자담보 기간(10년) 이내 → 시공사 귀책</div></div>
+                </div>
+                <div style="margin-top:12px">
+                  <div style="font-size:11px;font-weight:600;color:var(--s);margin-bottom:7px;text-transform:uppercase;letter-spacing:.3px">인용 판례</div>
+                  <div class="case-item"><span class="case-num">대법원 2019다287231</span><span>외벽 균열 시공사 귀책 인정 — 손해배상 확정</span></div>
+                  <div class="case-item"><span class="case-num">서울고법 2021나38421</span><span>동일 균열 패턴 공동주택 하자담보책임 인용</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">소송 진행 현황 및 액션</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div class="timeline">
+                  <div class="tl"><div class="tl-dot tl-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div><div class="tl-title">AI 하자 분류 완료 (시공상 하자 확인)</div><div class="tl-time">2026-03-13 14:05</div></div></div>
+                  <div class="tl"><div class="tl-dot tl-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div><div class="tl-title">증거자료 패키지 자동 생성 → APT Insurance 소송팀 전달</div><div class="tl-time">2026-03-13 14:07</div></div></div>
+                  <div class="tl"><div class="tl-dot tl-now" style="font-size:11px;font-weight:700">3</div><div><div class="tl-title">소송 제기 준비 중</div><div class="tl-time">진행 중</div></div></div>
+                  <div class="tl"><div class="tl-dot tl-wait" style="font-size:11px;font-weight:700">4</div><div><div class="tl-title">변론 진행 예정</div><div class="tl-time">대기</div></div></div>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-p" onclick="showModal('소송 제기 확인','CLM-0246 마포래미안 건을 시공사(○○건설)를 상대로 소송 제기하시겠습니까?\n\n공동주택관리법 제37조 기반 하자담보책임 청구입니다.')">소송 제기 요청</button>
+                  <button class="btn btn-s" onclick="showToast('증거 자료 ZIP 패키지 다운로드 시작 (사진 + AI 측정값 + 약관 근거)')">증거 패키지 다운로드</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── D4: TYPE B ── -->
+      <div class="view" id="v-type-b">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <span class="badge bb" style="font-size:11px;padding:3px 10px">TYPE B — 면책 처리</span>
+              <span style="font-size:11px;color:var(--s)">CLM-2026-0245</span>
+            </div>
+            <div class="page-title">잠실파크리오 세탁기 배수 연결 불량</div>
+            <div style="font-size:13px;color:var(--s)">영업배상책임보험 / 접수: 2026-03-13 11:30 / 청구인: 홍○○</div>
+          </div>
+          <div class="nav-arrows">
+            <button class="arrow-btn" onclick="showToast('이전 TYPE B 건 — CLM-0242')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>이전 건
+            </button>
+            <span class="claim-counter">1 / 61</span>
+            <button class="arrow-btn" onclick="showToast('다음 TYPE B 건 — CLM-0240')">
+              다음 건<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 면책 처리 상태 플로우 -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-body" style="padding:12px 18px">
+            <div style="font-size:11px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">면책 처리 진행 상태</div>
+            <div class="status-flow">
+              <div class="sf-item active" onclick="setFaceState(0,this)">면책 통보 완료</div>
+              <div class="sf-item" onclick="setFaceState(1,this)">이의신청 수신</div>
+              <div class="sf-item" onclick="setFaceState(2,this)">재검토 중</div>
+              <div class="sf-item" onclick="setFaceState(3,this)">최종 종결</div>
+            </div>
+            <div id="faceStateDetail" style="font-size:12px;color:var(--s);background:var(--b2);border-radius:6px;padding:8px 10px">2026-03-13 법률 의견서와 함께 면책 사유가 청구인에게 발송되었습니다. 이의신청 접수 대기 중 (기한: 30일)</div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">AI 분류 근거 — 신뢰도 95.8%</div>
+              <div class="card-body">
+                <div style="display:flex;gap:8px;margin-bottom:12px"><span class="badge bb">TYPE B</span><span style="background:var(--rl);color:var(--red);font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px">신뢰도 95.8%</span></div>
+                <div class="reason-block">
+                  <div class="r-item"><div class="r-dot" style="background:var(--red)"></div><div>세탁기 배수 호스 연결부 이탈 흔적 확인</div></div>
+                  <div class="r-item"><div class="r-dot" style="background:var(--red)"></div><div>외부 충격 없이 점유자 부주의로 인한 배수 불량 패턴</div></div>
+                  <div class="r-item"><div class="r-dot" style="background:var(--red)"></div><div>민법 758조 공작물 책임 — '설치·관리 하자' 미충족</div></div>
+                </div>
+                <div style="margin-top:10px;background:var(--rl);border-radius:6px;padding:10px 12px">
+                  <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px">적용 약관 (자동 매칭)</div>
+                  <div style="font-size:12px;color:var(--red);line-height:1.6;opacity:.9">보험약관 제4조 제2항 제3호 — 피보험자/점유자의 고의·과실</div>
+                </div>
+                <div style="margin-top:8px">
+                  <div class="case-item"><span class="case-num" style="color:var(--red)">서울중앙지법 2022가단52890</span><span>세입자 과실로 인한 면책 판결</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">법률 의견서 상태</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div style="background:var(--pl);border:1px solid #c7d2fe;border-radius:8px;padding:10px 13px;font-size:12px;line-height:1.8;margin-bottom:10px">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:6px;color:var(--p)">면책 통보 의견서 — 발송 완료</div>
+                  본 건은 보험약관 제4조 제2항 제3호에 따라 면책 대상으로 판단됩니다.<br>
+                  <span style="font-size:11px;color:var(--s)">APT Insurance 법무팀 최종 검토 완료 | 2026-03-13 15:22</span>
+                </div>
+                <div class="btn-row" style="margin-top:0">
+                  <button class="btn btn-s" onclick="showToast('법률 의견서 PDF 다운로드')">PDF 다운로드</button>
+                  <button class="btn btn-s" onclick="go('opinion')">의견서 관리</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">이의신청 관리</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                  <span style="font-size:13px;color:var(--s)">접수된 이의신청 없음</span>
+                  <span style="font-size:11px;color:var(--s);background:var(--b2);padding:3px 8px;border-radius:4px">잔여 기간 17일</span>
+                </div>
+                <div style="background:var(--b2);border-radius:8px;padding:24px;text-align:center;color:var(--s)">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="margin:0 auto 8px;display:block;opacity:.4"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <div style="font-size:12px">이의신청 기한 내 접수 시<br>자동으로 재검토 단계로 이동합니다</div>
+                </div>
+                <div style="margin-top:12px;padding:10px 12px;background:var(--al);border-radius:6px;font-size:12px;color:var(--amber)">이의신청 수신 시 APT Insurance 법무팀에 자동 알림이 발송됩니다.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">금감원 민원 대응 자료</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div style="font-size:12px;color:var(--s);line-height:1.6;margin-bottom:12px">면책 통보 시 자동 생성된 민원 대응 자료입니다. 금감원 민원 접수 시 즉시 활용 가능합니다.</div>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--b2);border-radius:6px;font-size:12px">
+                    <span style="font-weight:600">민원 대응 요약서</span><button class="btn btn-s" style="padding:3px 9px;font-size:11px" onclick="showToast('민원 대응 요약서 다운로드')">다운로드</button>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--b2);border-radius:6px;font-size:12px">
+                    <span style="font-weight:600">약관 조항 해석서</span><button class="btn btn-s" style="padding:3px 9px;font-size:11px" onclick="showToast('약관 조항 해석서 다운로드')">다운로드</button>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--b2);border-radius:6px;font-size:12px">
+                    <span style="font-weight:600">유사 판례 패키지</span><button class="btn btn-s" style="padding:3px 9px;font-size:11px" onclick="showToast('유사 판례 패키지 다운로드')">다운로드</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── D5: TYPE C ── -->
+      <div class="view" id="v-type-c">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="badge bc" style="font-size:11px;padding:3px 10px">TYPE C — 보험 지급</span><span style="font-size:11px;color:var(--s)">CLM-2026-0247</span></div>
+            <div class="page-title">헬리오시티 102동 1204호 천장 급배수 누수</div>
+            <div style="font-size:13px;color:var(--s)">주택화재보험 / 접수: 2026-03-14 09:23</div>
+          </div>
+          <span style="background:var(--gl);color:var(--green);font-size:11px;font-weight:600;padding:4px 12px;border-radius:5px">신뢰도 97.1%</span>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">첨부 사진 — 세그멘테이션 결과</div>
+              <div class="card-body" style="padding:12px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <div class="photo-ph" style="aspect-ratio:4/3;grid-column:span 2;background:#d0e8f5;border:1.5px dashed var(--p)">
+                    <div class="inner"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#64748B" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#64748B" stroke-width="1.5"/></svg><span style="font-size:11px;color:var(--s)">세그멘테이션 결과</span></div>
+                    <div style="position:absolute;bottom:8px;right:8px;background:var(--p);color:#fff;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600">AREA 2.4㎡</div>
+                  </div>
+                  <div class="photo-ph" style="aspect-ratio:4/3;background:#c8e0ed"><div class="inner"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#64748B" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#64748B" stroke-width="1.5"/></svg><span style="font-size:11px;color:var(--s)">근접 확인</span></div></div>
+                  <div class="photo-ph" style="aspect-ratio:4/3;background:#bfd7e7"><div class="inner"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#64748B" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#64748B" stroke-width="1.5"/></svg><span style="font-size:11px;color:var(--s)">재료 확인</span></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">AI 분류 근거</div>
+              <div class="card-body">
+                <div class="reason-block">
+                  <div class="r-item"><div class="r-dot" style="background:var(--green)"></div><div>공용 급배수 배관 누출에 의한 전유부 피해 확인</div></div>
+                  <div class="r-item"><div class="r-dot" style="background:var(--green)"></div><div>TYPE A(시공 하자) 근거 불충분</div></div>
+                  <div class="r-item"><div class="r-dot" style="background:var(--green)"></div><div>TYPE B(점유자 과실) 증거 없음 → 정당 보상 대상</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">AI 적산 결과 요약 — 산출 6분 41초</div>
+              <div class="card-body">
+                <div style="text-align:center;padding:14px 0 10px">
+                  <div style="font-size:36px;font-weight:700;color:var(--t);letter-spacing:-1px">607,850원</div>
+                  <div style="font-size:12px;color:var(--s);margin-top:4px">AI 산출 적정 보험금 (표준노임단가 기준)</div>
+                </div>
+                <div style="background:var(--al);border-radius:6px;padding:9px 12px;font-size:12px;color:var(--amber);display:flex;justify-content:space-between;margin-bottom:14px;border:1px solid #fde68a">
+                  <span>업체 견적 850,000원 대비</span><strong>-28.5% (242,150원 절감)</strong>
+                </div>
+                <div class="kv"><span class="kv-label">재료비 (방수층 3.1㎡)</span><span class="kv-val">182,400원</span></div>
+                <div class="kv"><span class="kv-label">노무비 (재도장 12.3㎡)</span><span class="kv-val">298,700원</span></div>
+                <div class="kv"><span class="kv-label">균열주입 (4.7m)</span><span class="kv-val">186,900원</span></div>
+                <div class="kv"><span class="kv-label" style="color:var(--red)">감가상각 (9.2%)</span><span class="kv-val" style="color:var(--red)">-60,150원</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-size:15px;font-weight:700;border-top:1px solid var(--b);margin-top:4px"><span>지급 보험금</span><span style="color:var(--green)">607,850원</span></div>
+                <div class="btn-row">
+                  <button class="btn btn-g" onclick="go('approve')">승인 및 지급 처리</button>
+                  <button class="btn btn-s" onclick="go('estimation')">수량 내역서 상세</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── D6: 적산 수량 내역서 ── -->
+      <div class="view" id="v-estimation">
+        <div class="page-title">수량 내역서 — CLM-2026-0247</div>
+        <div class="page-sub">2026년 1분기 건설물가정보지 단가 적용</div>
+        <div class="table-card">
+          <table>
+            <thead><tr><th style="width:36px"></th><th>공종명</th><th>수량 / 단위</th><th>단가 기준</th><th style="text-align:right">소계</th></tr></thead>
+            <tbody id="estBody">
+              <tr data-row="1"><td><div class="cb on" onclick="toggleEst(this,1)">✓</div></td><td><div style="font-weight:600">방수층 보수</div><div style="font-size:11px;color:var(--s)">탄성도막 방수</div></td><td>3.10 ㎡</td><td><span style="background:var(--pl);color:var(--p);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px">표준품셈</span></td><td style="text-align:right;font-weight:600" id="r1">79,100원</td></tr>
+              <tr data-row="2"><td><div class="cb on" onclick="toggleEst(this,2)">✓</div></td><td><div style="font-weight:600">천장 재도장</div><div style="font-size:11px;color:var(--s)">퍼티 + 도장 2회</div></td><td>12.30 ㎡</td><td><span style="background:var(--gl);color:var(--green);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px">물가정보지</span></td><td style="text-align:right;font-weight:600" id="r2">124,700원</td></tr>
+              <tr data-row="3"><td><div class="cb on" onclick="toggleEst(this,3)">✓</div></td><td><div style="font-weight:600">균열주입</div><div style="font-size:11px;color:var(--s)">에폭시 수지</div></td><td>4.70 m</td><td><span style="background:var(--pl);color:var(--p);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px">표준품셈</span></td><td style="text-align:right;font-weight:600" id="r3">104,900원</td></tr>
+              <tr data-row="4" id="row4"><td><div class="cb" onclick="toggleEst(this,4)"></div></td><td><div class="striked">석고보드 교체</div><div style="font-size:11px;color:#9CA3AF">미선택</div></td><td class="striked">2.40 ㎡</td><td>—</td><td style="text-align:right" class="striked">42,700원</td></tr>
+              <tr style="background:var(--b2)"><td colspan="4" style="font-weight:600;padding:10px 16px">소계 (3개 공종) + 간접비 10.5%</td><td style="text-align:right;font-weight:700;padding:10px 16px" id="estTotal">341,100원</td></tr>
+              <tr class="est-deduct"><td colspan="4" style="padding:9px 16px">감가상각 (건축 9.2년 / 내용연수 40년)</td><td style="text-align:right;font-weight:600;padding:9px 16px">-60,150원</td></tr>
+              <tr class="est-deduct"><td colspan="4" style="padding:9px 16px">자기부담금 (약관 기준)</td><td style="text-align:right;font-weight:600;padding:9px 16px">-30,000원</td></tr>
+              <tr class="est-total"><td colspan="4" style="padding:12px 16px">최종 지급 보험금</td><td style="text-align:right;padding:12px 16px;color:var(--green)" id="estFinal">607,850원</td></tr>
+            </tbody>
+          </table>
+          <div style="padding:11px 18px;background:var(--al);display:flex;justify-content:space-between;font-size:13px;border-top:1px solid #fde68a">
+            <span>업체 제출 견적: 850,000원 / AI 산출 대비</span>
+            <strong style="color:var(--amber)">-242,150원 절감 (-28.5%)</strong>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-g" onclick="go('approve')">손해사정사 승인 요청</button>
+          <button class="btn btn-s" onclick="showToast('수량 재산출 완료')">항목 수정 후 재산출</button>
+          <button class="btn btn-s" onclick="go('type-c')">적산 요약으로 돌아가기</button>
+        </div>
+      </div>
+
+      <!-- ── D7: 손해사정사 승인 ── -->
+      <div class="view" id="v-approve">
+        <div class="page-title">손해사정사 최종 검토</div>
+        <div class="page-sub">CLM-2026-0247 / 헬리오시티 102동 1204호</div>
+        <div class="detail-grid">
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">AI 산출 결과 최종 확인</div>
+              <div class="card-body" style="text-align:center;padding:20px 18px 16px">
+                <div style="font-size:38px;font-weight:700;color:var(--t);letter-spacing:-1px">607,850원</div>
+                <div style="font-size:12px;color:var(--s);margin-top:4px">업체 견적 대비 -28.5% / 산출 6분 41초</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">처리 옵션</div>
+              <div class="card-body">
+                <div class="radio-opt sel" id="ropt1" onclick="selOpt(1)"><div class="r-circle on" id="rc1"></div>AI 산출액 그대로 승인 (607,850원)</div>
+                <div class="radio-opt" id="ropt2" onclick="selOpt(2)"><div class="r-circle" id="rc2"></div>금액 수정 후 승인</div>
+                <div class="radio-opt" id="ropt3" onclick="selOpt(3)"><div class="r-circle" id="rc3"></div>재분류 요청 (AI 재심사)</div>
+                <div style="margin-top:12px">
+                  <div style="font-size:12px;font-weight:600;color:var(--s);margin-bottom:6px">검토 의견 (선택)</div>
+                  <textarea id="approveNote" style="width:100%;border:1px solid var(--b);border-radius:7px;padding:9px 11px;font-size:13px;font-family:inherit;resize:vertical;min-height:72px;color:var(--t);outline:none;background:var(--card);transition:border .12s" placeholder="AI 산출 결과에 대한 검토 의견을 입력하세요..." onfocus="this.style.borderColor='var(--p)'" onblur="this.style.borderColor='var(--b)'"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-col">
+            <div class="card">
+              <div class="card-head">법률 의견서 첨부</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div style="background:var(--pl);border:1px solid #c7d2fe;border-radius:7px;padding:11px 13px;display:flex;gap:10px;align-items:flex-start">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#FF6B35" stroke-width="1.6"/><path d="M14 2v6h6M16 13H8M16 17H8" stroke="#FF6B35" stroke-width="1.6" stroke-linecap="round"/></svg>
+                  <div><div style="font-weight:600;font-size:13px;color:var(--p)">보험업법 제185조 기반 손해사정 의견서</div><div style="font-size:11px;color:var(--s);margin-top:2px">APT Insurance 법무팀 첨부 완료 — 2026-03-14 09:45</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">처리 이력</div>
+              <div class="card-body" style="padding:12px 18px">
+                <div class="timeline">
+                  <div class="tl"><div class="tl-dot tl-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div><div class="tl-title">청구 접수</div><div class="tl-time">2026-03-14 09:23</div></div></div>
+                  <div class="tl"><div class="tl-dot tl-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div><div class="tl-title">AI 분류 완료 (TYPE C)</div><div class="tl-time">2026-03-14 09:24</div></div></div>
+                  <div class="tl"><div class="tl-dot tl-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div><div class="tl-title">적산 산출 완료 (607,850원)</div><div class="tl-time">2026-03-14 09:31</div></div></div>
+                  <div class="tl"><div class="tl-dot tl-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div><div><div class="tl-title">법률 의견서 첨부</div><div class="tl-time">2026-03-14 09:45</div></div></div>
+                  <div class="tl" id="tl-final"><div class="tl-dot tl-now" id="tl-fd" style="font-size:10px;font-weight:700">5</div><div><div class="tl-title" id="tl-ft">손해사정사 최종 승인 대기</div><div class="tl-time" id="tl-ft2">현재</div></div></div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-g" style="flex:1;justify-content:center;padding:11px 14px;font-size:13px" onclick="doApprove()">최종 승인 및 지급 처리</button>
+              <button class="btn btn-d" onclick="showModal('반려 처리 확인','CLM-0247 청구 건을 반려 처리하시겠습니까? 청구인에게 사유가 통보됩니다.')">반려</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 법률 의견서 ── -->
+      <div class="view" id="v-opinion">
+        <div class="page-title">법률 의견서 관리</div>
+        <div class="page-sub">자동 생성된 법률 의견서 목록</div>
+        <div class="table-card">
+          <table>
+            <thead><tr><th>청구번호</th><th>사건 요약</th><th>의견서 유형</th><th>생성일</th><th>상태</th><th>액션</th></tr></thead>
+            <tbody>
+              <tr><td style="font-size:11px;color:var(--s)">CLM-0245</td><td><div style="font-weight:600">잠실파크리오 — 세탁기 배수</div></td><td>면책 통보서</td><td style="font-size:12px;color:var(--s)">2026-03-13</td><td><span class="status-pill s-done">발송 완료</span></td><td><button class="btn btn-s" style="padding:4px 10px;font-size:11px" onclick="showToast('PDF 다운로드')">PDF</button></td></tr>
+              <tr><td style="font-size:11px;color:var(--s)">CLM-0246</td><td><div style="font-weight:600">마포래미안 — 외벽 균열</div></td><td>소송 이관 근거서</td><td style="font-size:12px;color:var(--s)">2026-03-13</td><td><span class="status-pill s-transfer">APT Insurance 전달</span></td><td><button class="btn btn-s" style="padding:4px 10px;font-size:11px" onclick="showToast('PDF 다운로드')">PDF</button></td></tr>
+              <tr><td style="font-size:11px;color:var(--s)">CLM-0247</td><td><div style="font-weight:600">헬리오시티 — 급배수 누수</div></td><td>손해사정 의견서</td><td style="font-size:12px;color:var(--s)">2026-03-14</td><td><span class="status-pill s-wait">승인 대기</span></td><td><button class="btn btn-p" style="padding:4px 10px;font-size:11px" onclick="go('approve')">승인</button></td></tr>
+              <tr><td style="font-size:11px;color:var(--s)">CLM-0242</td><td><div style="font-weight:600">분당파크뷰 — 바닥재 파손</div></td><td>면책 통보서</td><td style="font-size:12px;color:var(--s)">2026-03-11</td><td><span class="status-pill s-done">처리 완료</span></td><td><button class="btn btn-s" style="padding:4px 10px;font-size:11px" onclick="showToast('PDF 다운로드')">PDF</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<!-- 전체 접수 관리 -->
-<div class="section" id="s-all">
-<h1>전체 접수 관리</h1>
-<p class="subtitle">입주민/관리사무소 출처별 하자접수 통합 관리</p>
-<div class="filter-bar" id="allFilters">
-<button class="pill pill-outline active" onclick="filterPill(this)">전체</button>
-<button class="pill pill-outline" onclick="filterPill(this)">입주민</button>
-<button class="pill pill-outline" onclick="filterPill(this)">관리사무소</button>
-<span style="width:8px"></span>
-<button class="pill pill-outline active" onclick="filterPill(this)">전체 TYPE</button>
-<button class="pill pill-outline" onclick="filterPill(this)">TYPE A</button>
-<button class="pill pill-outline" onclick="filterPill(this)">TYPE B</button>
-<button class="pill pill-outline" onclick="filterPill(this)">TYPE C</button>
-<span style="width:8px"></span>
-<button class="pill pill-outline active" onclick="filterPill(this)">전체 상태</button>
-<button class="pill pill-outline" onclick="filterPill(this)">접수</button>
-<button class="pill pill-outline" onclick="filterPill(this)">조사중</button>
-<button class="pill pill-outline" onclick="filterPill(this)">완료</button>
+<!-- 모달 -->
+<div class="modal-bg" id="modalBg" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-btn-row">
+      <button class="btn btn-s" onclick="closeModal()">취소</button>
+      <button class="btn btn-p" id="modalConfirm" onclick="closeModal();showToast('처리가 완료되었습니다')">확인</button>
+    </div>
+  </div>
 </div>
-<div style="overflow-x:auto">
-<table>
-<tr><th>번호</th><th>사고유형</th><th>위치</th><th>출처</th><th>피해자구분</th><th>AI TYPE</th><th>상태</th><th>날짜</th></tr>
-<tr><td>HD-058</td><td>누수</td><td>101동 1502호</td><td>입주민</td><td>소유자</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-green">접수</span></td><td>2026-03-28</td></tr>
-<tr><td>HD-057</td><td>화재</td><td>103동 지하주차장</td><td>관리사무소</td><td>공용</td><td><span class="pill pill-a">A</span></td><td><span class="pill pill-orange">조사중</span></td><td>2026-03-27</td></tr>
-<tr><td>HD-056</td><td>파손</td><td>102동 옥상</td><td>관리사무소</td><td>공용</td><td><span class="pill pill-b">B</span></td><td><span class="pill pill-gray">대기</span></td><td>2026-03-27</td></tr>
-<tr><td>HD-055</td><td>누수</td><td>101동 803호</td><td>입주민</td><td>임차인</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-green">접수</span></td><td>2026-03-26</td></tr>
-<tr><td>HD-054</td><td>누수</td><td>104동 201호</td><td>입주민</td><td>소유자</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-orange">조사중</span></td><td>2026-03-26</td></tr>
-<tr><td>HD-053</td><td>파손</td><td>102동 1201호</td><td>입주민</td><td>소유자</td><td><span class="pill pill-b">B</span></td><td><span class="pill pill-green">완료</span></td><td>2026-03-25</td></tr>
-<tr><td>HD-052</td><td>누수</td><td>103동 501호</td><td>입주민</td><td>임차인</td><td><span class="pill pill-b">B</span></td><td><span class="pill pill-orange">조사중</span></td><td>2026-03-25</td></tr>
-<tr><td>HD-051</td><td>화재</td><td>101동 B1 전기실</td><td>관리사무소</td><td>공용</td><td><span class="pill pill-a">A</span></td><td><span class="pill pill-orange">조사중</span></td><td>2026-03-24</td></tr>
-<tr><td>HD-050</td><td>파손</td><td>104동 외벽</td><td>관리사무소</td><td>공용</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-green">완료</span></td><td>2026-03-24</td></tr>
-<tr><td>HD-049</td><td>누수</td><td>102동 302호</td><td>입주민</td><td>소유자</td><td><span class="pill pill-c">C</span></td><td><span class="pill pill-green">완료</span></td><td>2026-03-23</td></tr>
-</table>
-</div>
-</div>
-
-<!-- TYPE A -->
-<div class="section" id="s-typeA">
-<h1>TYPE A 관리</h1>
-<p class="subtitle">소송 전환 대상 사건 관리</p>
-<h3 style="margin-bottom:14px;font-size:16px">소송 진행 트래커</h3>
-<div class="tracker">
-<div class="step done">1. AI 분류</div>
-<div class="step done">2. 손해사정 이관</div>
-<div class="step current">3. 내용증명</div>
-<div class="step">4. 소송제기</div>
-<div class="step">5. 판결/합의</div>
-<div class="step">6. 구상권</div>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">사건 리스트</h3>
-<div style="overflow-x:auto">
-<table>
-<tr><th>번호</th><th>사고유형</th><th>위치</th><th>출처</th><th>현재단계</th><th>예상청구액</th><th>상태</th></tr>
-<tr><td>HD-057</td><td>화재</td><td>103동 지하주차장</td><td>관리사무소</td><td>내용증명</td><td>45,000,000</td><td><span class="pill pill-orange">진행중</span></td></tr>
-<tr><td>HD-051</td><td>화재</td><td>101동 B1 전기실</td><td>관리사무소</td><td>소송제기</td><td>78,000,000</td><td><span class="pill pill-orange">진행중</span></td></tr>
-<tr><td>HD-042</td><td>누수</td><td>102동 1801호</td><td>입주민</td><td>AI 분류</td><td>12,500,000</td><td><span class="pill pill-gray">대기</span></td></tr>
-<tr><td>HD-038</td><td>파손</td><td>104동 엘리베이터</td><td>관리사무소</td><td>AI 분류</td><td>23,000,000</td><td><span class="pill pill-gray">대기</span></td></tr>
-<tr><td>HD-031</td><td>누수</td><td>101동 301호</td><td>입주민</td><td>구상권</td><td>8,200,000</td><td><span class="pill pill-green">완료</span></td></tr>
-</table>
-</div>
-<div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
-<div class="card orange"><div class="label">구상권 예상 총액</div><div class="value">166,700,000</div></div>
-<div class="card"><div class="label">진행중 구상권</div><div class="value">2건</div></div>
-<div class="card"><div class="label">회수 완료</div><div class="value">8,200,000</div></div>
-</div>
-</div>
-
-<!-- TYPE B -->
-<div class="section" id="s-typeB">
-<h1>TYPE B 관리</h1>
-<p class="subtitle">면책 통보 대상 사건 관리</p>
-<h3 style="margin-bottom:14px;font-size:16px">면책 처리 플로우</h3>
-<div class="flow-steps">
-<div class="fstep f-done">통보완료 (4건)</div>
-<div class="fstep f-active">이의신청 수신 (3건)</div>
-<div class="fstep f-wait">재검토 (2건)</div>
-<div class="fstep f-wait">최종종결 (3건)</div>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">이의신청 관리</h3>
-<div style="overflow-x:auto">
-<table class="objection-table">
-<tr><th>번호</th><th>사고유형</th><th>위치</th><th>면책사유</th><th>이의신청</th><th>상태</th></tr>
-<tr><td>HD-056</td><td>파손</td><td>102동 옥상</td><td>자연재해 해당</td><td>미접수</td><td><span class="pill pill-gray">대기</span></td></tr>
-<tr><td>HD-053</td><td>파손</td><td>102동 1201호</td><td>경년열화</td><td>접수</td><td><span class="pill pill-orange">재검토</span></td></tr>
-<tr><td>HD-052</td><td>누수</td><td>103동 501호</td><td>입주자 과실</td><td>접수</td><td><span class="pill pill-orange">재검토</span></td></tr>
-<tr><td>HD-046</td><td>누수</td><td>101동 401호</td><td>보증기간 만료</td><td>미접수</td><td><span class="pill pill-green">종결</span></td></tr>
-<tr><td>HD-039</td><td>파손</td><td>103동 외벽</td><td>시공사 면책조항</td><td>접수</td><td><span class="pill pill-green">종결</span></td></tr>
-</table>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">금감원 민원 대응 자료</h3>
-<div class="download-row">
-<button class="download-btn" onclick="alert('요약서 다운로드')">면책사유 요약서</button>
-<button class="download-btn" onclick="alert('약관해석서 다운로드')">약관 해석서</button>
-<button class="download-btn" onclick="alert('판례패키지 다운로드')">판례 패키지</button>
-</div>
-</div>
-
-<!-- TYPE C -->
-<div class="section" id="s-typeC">
-<h1>TYPE C 관리</h1>
-<p class="subtitle">AI 적산 + 보험금 산출</p>
-<div class="estimation-card">
-<div class="label" style="color:var(--gray);margin-bottom:4px">AI 적산 총액 (HD-058 기준)</div>
-<div class="total">32,450,000원</div>
-<div class="split">
-<div><strong>소유자 부담:</strong> 21,800,000원</div>
-<div><strong>임차인 부담:</strong> 10,650,000원</div>
-</div>
-</div>
-<div class="legal-note">법적 근거: 2026년 상반기 건설공사 표준품셈 기준 (국토교통부 고시 제2026-15호)</div>
-<h3 style="margin-bottom:14px;font-size:16px">공종별 산정 내역</h3>
-<div style="overflow-x:auto">
-<table>
-<tr><th>공종</th><th>수량</th><th>단가</th><th>금액</th><th>비고</th></tr>
-<tr><td>도배</td><td>85m2</td><td>18,000</td><td>1,530,000</td><td>전유부 거실+방3</td></tr>
-<tr><td>도장</td><td>120m2</td><td>12,500</td><td>1,500,000</td><td>천장+벽면</td></tr>
-<tr><td>방수</td><td>45m2</td><td>85,000</td><td>3,825,000</td><td>욕실2+발코니</td></tr>
-<tr><td>타일</td><td>38m2</td><td>65,000</td><td>2,470,000</td><td>욕실+현관</td></tr>
-<tr><td>배관</td><td>1식</td><td>8,500,000</td><td>8,500,000</td><td>급수관 교체</td></tr>
-<tr><td>목공</td><td>1식</td><td>6,200,000</td><td>6,200,000</td><td>몰딩+문틀+마루</td></tr>
-<tr><td>전기</td><td>1식</td><td>4,800,000</td><td>4,800,000</td><td>배선 교체</td></tr>
-<tr><td>잡공사</td><td>1식</td><td>3,625,000</td><td>3,625,000</td><td>철거+폐기물+양중</td></tr>
-</table>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">보험 연계 (우선순서)</h3>
-<div class="insurance-order">
-<div class="ins-item"><div class="order-num">1</div>CGL<div style="font-size:12px;color:var(--gray);margin-top:4px">시설소유자배상</div></div>
-<div class="ins-item"><div class="order-num">2</div>재물보험<div style="font-size:12px;color:var(--gray);margin-top:4px">건물/시설물</div></div>
-<div class="ins-item"><div class="order-num">3</div>개인보험<div style="font-size:12px;color:var(--gray);margin-top:4px">화재/가재도구</div></div>
-</div>
-<h3 style="margin-bottom:14px;font-size:16px">자기부담금 관리</h3>
-<div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
-<div class="card"><div class="label">CGL 자기부담금</div><div class="value" style="font-size:22px">500,000원</div></div>
-<div class="card"><div class="label">재물 자기부담금</div><div class="value" style="font-size:22px">200,000원</div></div>
-<div class="card"><div class="label">합계 공제액</div><div class="value" style="font-size:22px;color:var(--orange)">700,000원</div></div>
-</div>
-</div>
-
-<!-- 품셈/단가 관리 -->
-<div class="section" id="s-cost">
-<h1>품셈/단가 관리</h1>
-<p class="subtitle">2026년 상반기 건설공사 표준품셈 기준</p>
-<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
-<input class="search-box" placeholder="공종 검색..." id="costSearch" oninput="filterCost()">
-<button class="pill pill-orange" style="padding:10px 24px;font-size:14px" onclick="alert('최신 품셈 단가 확인 완료')">최신화 확인</button>
-</div>
-<div style="overflow-x:auto">
-<table id="costTable">
-<tr><th>공종</th><th>단위</th><th>재료비</th><th>노무비</th><th>합계단가</th><th>전기대비</th><th>갱신일</th></tr>
-<tr><td>도배</td><td>m2</td><td>8,500</td><td>9,500</td><td>18,000</td><td><span style="color:var(--green)">+2.3%</span></td><td>2026-01-15</td></tr>
-<tr><td>도장</td><td>m2</td><td>4,200</td><td>8,300</td><td>12,500</td><td><span style="color:var(--green)">+1.8%</span></td><td>2026-01-15</td></tr>
-<tr><td>방수</td><td>m2</td><td>42,000</td><td>43,000</td><td>85,000</td><td><span style="color:var(--red)">+5.2%</span></td><td>2026-01-15</td></tr>
-<tr><td>타일</td><td>m2</td><td>28,000</td><td>37,000</td><td>65,000</td><td><span style="color:var(--green)">+3.1%</span></td><td>2026-01-15</td></tr>
-<tr><td>배관(급수)</td><td>m</td><td>15,000</td><td>22,000</td><td>37,000</td><td><span style="color:var(--green)">+1.5%</span></td><td>2026-01-15</td></tr>
-<tr><td>배관(급탕)</td><td>m</td><td>18,000</td><td>24,000</td><td>42,000</td><td><span style="color:var(--green)">+1.7%</span></td><td>2026-01-15</td></tr>
-<tr><td>목공(마루)</td><td>m2</td><td>35,000</td><td>28,000</td><td>63,000</td><td><span style="color:var(--red)">+4.8%</span></td><td>2026-01-15</td></tr>
-<tr><td>전기(배선)</td><td>m</td><td>5,500</td><td>12,000</td><td>17,500</td><td><span style="color:var(--green)">+2.0%</span></td><td>2026-01-15</td></tr>
-<tr><td>철거</td><td>m2</td><td>2,000</td><td>15,000</td><td>17,000</td><td><span style="color:var(--green)">+1.2%</span></td><td>2026-01-15</td></tr>
-<tr><td>폐기물처리</td><td>ton</td><td>180,000</td><td>45,000</td><td>225,000</td><td><span style="color:var(--red)">+6.1%</span></td><td>2026-01-15</td></tr>
-</table>
-</div>
-</div>
-
-<!-- 현장조사 -->
-<div class="section" id="s-inspect">
-<h1>현장조사</h1>
-<p class="subtitle">현장조사 일정 및 결과 관리</p>
-<div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-bottom:24px">
-<div class="card orange"><div class="label">긴급 조사</div><div class="value">3</div></div>
-<div class="card"><div class="label">금주 예정</div><div class="value">7</div></div>
-<div class="card"><div class="label">조사 완료</div><div class="value">48</div></div>
-</div>
-<div style="overflow-x:auto">
-<table>
-<tr><th>번호</th><th>유형</th><th>위치</th><th>조사일</th><th>담당자</th><th>긴급</th><th>상태</th></tr>
-<tr><td>HD-058</td><td>누수</td><td>101동 1502호</td><td>2026-03-29</td><td>김현수</td><td><span class="pill pill-a">긴급</span></td><td><span class="pill pill-gray">예정</span></td></tr>
-<tr><td>HD-057</td><td>화재</td><td>103동 지하주차장</td><td>2026-03-29</td><td>이민준</td><td><span class="pill pill-a">긴급</span></td><td><span class="pill pill-gray">예정</span></td></tr>
-<tr><td>HD-055</td><td>누수</td><td>101동 803호</td><td>2026-03-30</td><td>김현수</td><td><span class="pill pill-a">긴급</span></td><td><span class="pill pill-gray">예정</span></td></tr>
-<tr><td>HD-054</td><td>누수</td><td>104동 201호</td><td>2026-03-28</td><td>박서윤</td><td></td><td><span class="pill pill-orange">진행중</span></td></tr>
-<tr><td>HD-052</td><td>누수</td><td>103동 501호</td><td>2026-03-27</td><td>이민준</td><td></td><td><span class="pill pill-green">완료</span></td></tr>
-<tr><td>HD-050</td><td>파손</td><td>104동 외벽</td><td>2026-03-25</td><td>박서윤</td><td></td><td><span class="pill pill-green">완료</span></td></tr>
-<tr><td>HD-049</td><td>누수</td><td>102동 302호</td><td>2026-03-24</td><td>김현수</td><td></td><td><span class="pill pill-green">완료</span></td></tr>
-</table>
-</div>
-</div>
-
-<!-- 설정 -->
-<div class="section" id="s-settings">
-<h1>설정</h1>
-<p class="subtitle">시스템 환경 설정</p>
-<div class="settings-group">
-<h3>AI 분류 설정</h3>
-<div class="settings-row"><span>자동 TYPE 분류</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-<div class="settings-row"><span>AI 적산 자동 실행</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-<div class="settings-row"><span>면책 자동 판단 (TYPE B)</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
-</div>
-<div class="settings-group">
-<h3>알림 설정</h3>
-<div class="settings-row"><span>긴급 현장조사 알림</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-<div class="settings-row"><span>면책 기한 알림</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-<div class="settings-row"><span>품셈 단가 변동 알림</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-<div class="settings-row"><span>일일 리포트</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
-</div>
-<div class="settings-group">
-<h3>품셈 기준</h3>
-<div class="field-row">
-<div class="field-item"><label>기준 품셈</label><select><option>2026년 상반기 건설공사 표준품셈</option><option>2025년 하반기 건설공사 표준품셈</option></select></div>
-<div class="field-item"><label>단가 적용 지역</label><select><option>서울특별시</option><option>경기도</option><option>인천광역시</option></select></div>
-</div>
-</div>
-<div class="settings-group">
-<h3>보험 연계</h3>
-<div class="field-row">
-<div class="field-item"><label>CGL 보험사</label><input type="text" value="삼성화재"></div>
-<div class="field-item"><label>재물보험사</label><input type="text" value="현대해상"></div>
-</div>
-<div class="field-row">
-<div class="field-item"><label>CGL 자기부담금</label><input type="text" value="500,000원"></div>
-<div class="field-item"><label>재물 자기부담금</label><input type="text" value="200,000원"></div>
-</div>
-</div>
-</div>
-
-</div>
+<div id="toast"></div>
 
 <script>
-var map={dashboard:'s-dashboard',all:'s-all',typeA:'s-typeA',typeB:'s-typeB',typeC:'s-typeC',cost:'s-cost',inspect:'s-inspect',settings:'s-settings'};
-function go(k){
-document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
-document.getElementById(map[k]).classList.add('active');
-var links=document.querySelectorAll('#nav a');
-var idx={dashboard:0,all:1,typeA:2,typeB:3,typeC:4,cost:5,inspect:6,settings:7};
-links.forEach(function(a,i){a.classList.toggle('active',i===idx[k])});
-if(window.innerWidth<=768){toggleSidebar()}
+const viewMeta={
+  'dashboard':{nav:'nav-dashboard',crumb:'대시보드',sub:'2026년 3월'},
+  'claims':{nav:'nav-claims',crumb:'청구 목록',sub:'전체 247건'},
+  'type-a':{nav:'nav-type-a',crumb:'TYPE A 상세',sub:'CLM-2026-0246'},
+  'type-b':{nav:'nav-type-b',crumb:'TYPE B 상세',sub:'CLM-2026-0245'},
+  'type-c':{nav:'nav-type-c',crumb:'TYPE C 적산',sub:'CLM-2026-0247'},
+  'estimation':{nav:'nav-estimation',crumb:'수량 내역서',sub:'CLM-2026-0247'},
+  'approve':{nav:'nav-approve',crumb:'손해사정사 승인',sub:'CLM-2026-0247'},
+  'opinion':{nav:'nav-opinion',crumb:'법률 의견서',sub:''},
+};
+function go(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('v-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const m=viewMeta[id];
+  if(m){
+    const n=document.getElementById(m.nav);if(n)n.classList.add('active');
+    document.getElementById('breadcrumb').innerHTML=`<span class="cur">${m.crumb}</span>${m.sub?`<span class="sep">›</span><span>${m.sub}</span>`:''}`;
+  }
+  document.querySelector('.main').scrollTop=0;
 }
-function toggleSidebar(){
-document.getElementById('sidebar').classList.toggle('open');
-document.getElementById('overlay').classList.toggle('open');
+function filterClaims(type,btn){
+  btn.closest('.tab-row').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  let vis=0;
+  document.querySelectorAll('#claimsBody .cl-row').forEach(row=>{
+    let show=false;
+    if(type==='all') show=true;
+    else if(type==='a'||type==='b'||type==='c') show=row.dataset.type===type;
+    else if(type==='wait') show=row.dataset.status==='wait';
+    else if(type==='done') show=row.dataset.status==='done';
+    row.style.display=show?'':'none';
+    if(show)vis++;
+  });
+  document.getElementById('listCount').textContent=vis+'건 표시 중';
+  document.getElementById('noResult').style.display=vis?'none':'block';
 }
-function filterPill(el){el.classList.toggle('active')}
-function filterCost(){
-var q=document.getElementById('costSearch').value.toLowerCase();
-var rows=document.querySelectorAll('#costTable tr');
-rows.forEach(function(r,i){if(i===0)return;r.style.display=r.cells[0].textContent.toLowerCase().indexOf(q)>=0?'':'none'});
+function searchClaims(q){
+  q=q.toLowerCase().trim();
+  let vis=0;
+  document.querySelectorAll('#claimsBody .cl-row').forEach(row=>{
+    const match=!q||row.dataset.search.includes(q);
+    row.style.display=match?'':'none';
+    if(match)vis++;
+  });
+  document.getElementById('listCount').textContent=vis+'건 표시 중';
+  document.getElementById('noResult').style.display=vis?'none':'block';
 }
+function sortClaims(val){
+  const body=document.getElementById('claimsBody');
+  const rows=[...body.querySelectorAll('.cl-row')];
+  const order={'wait':0,'transfer':1,'sent':2,'done':3};
+  if(val==='status') rows.sort((a,b)=>(order[a.dataset.status]||9)-(order[b.dataset.status]||9));
+  else if(val==='conf') rows.sort((a,b)=>{const ag=parseFloat(a.querySelectorAll('div')[3]?.textContent)||0,bg=parseFloat(b.querySelectorAll('div')[3]?.textContent)||0;return bg-ag;});
+  rows.forEach(r=>body.insertBefore(r,document.getElementById('noResult')));
+}
+
+const pvData={
+  'clm0247':{badge:'<span class="badge bc">TYPE C — 보험 지급</span>',title:'헬리오시티 102동 1204호',sub:'CLM-0247 · 2026-03-14 09:23',body:`<div class="kv"><span class="kv-label">피해 내용</span><span class="kv-val">천장 급배수 누수</span></div><div class="kv"><span class="kv-label">AI 산출액</span><span class="kv-val" style="color:var(--green);font-size:15px">607,850원</span></div><div class="kv"><span class="kv-label">신뢰도</span><span class="kv-val" style="color:var(--green)">97.1%</span></div><div class="kv"><span class="kv-label">상태</span><span class="status-pill s-done">적산 완료</span></div><div class="kv" style="border:none"><span class="kv-label">업체 견적 대비</span><span class="kv-val" style="color:var(--amber)">-28.5% 절감</span></div>`,actions:`<button class="btn btn-g" style="flex:1;justify-content:center" onclick="go('approve')">승인 처리</button><button class="btn btn-s" onclick="go('estimation')">내역서</button>`},
+  'clm0246':{badge:'<span class="badge ba">TYPE A — 하자소송</span>',title:'마포래미안 803호',sub:'CLM-0246 · 2026-03-13 14:05',body:`<div class="kv"><span class="kv-label">피해 내용</span><span class="kv-val">외벽 수직 관통균열</span></div><div class="kv"><span class="kv-label">균열 폭</span><span class="kv-val" style="color:var(--amber)">0.8mm (허용 0.3mm)</span></div><div class="kv"><span class="kv-label">신뢰도</span><span class="kv-val" style="color:var(--green)">91.2%</span></div><div class="kv"><span class="kv-label">처리</span><span class="kv-val" style="color:var(--amber)">보험 면책 · 소송 이관</span></div><div class="kv" style="border:none"><span class="kv-label">청구 예상액</span><span class="kv-val" style="color:var(--p)">약 38,000,000원</span></div>`,actions:`<button class="btn btn-p" style="flex:1;justify-content:center" onclick="go('type-a')">소송 현황 보기</button><button class="btn btn-s" onclick="showToast('증거 패키지 다운로드')">증거 패키지</button>`},
+  'clm0245':{badge:'<span class="badge bb">TYPE B — 면책</span>',title:'잠실파크리오 1205호',sub:'CLM-0245 · 2026-03-13 11:30',body:`<div class="kv"><span class="kv-label">피해 내용</span><span class="kv-val">세탁기 배수 연결 불량</span></div><div class="kv"><span class="kv-label">판단</span><span class="kv-val" style="color:var(--red)">점유자 과실</span></div><div class="kv"><span class="kv-label">신뢰도</span><span class="kv-val" style="color:var(--green)">95.8%</span></div><div class="kv"><span class="kv-label">의견서</span><span class="status-pill s-sent">발송 완료</span></div><div class="kv" style="border:none"><span class="kv-label">이의신청</span><span class="kv-val">접수 없음 (잔여 17일)</span></div>`,actions:`<button class="btn btn-p" style="flex:1;justify-content:center" onclick="go('type-b')">면책 관리</button><button class="btn btn-s" onclick="go('opinion')">의견서</button>`},
+  'clm0244':{badge:'<span class="badge bc" style="background:var(--rl);color:var(--red)">TYPE C — 승인 대기</span>',title:'은평뉴타운 관리동',sub:'CLM-0244 · 2026-03-12 15:44',body:`<div style="background:var(--rl);border-radius:6px;padding:9px 11px;margin-bottom:10px;font-size:12px;color:var(--red);font-weight:600">손해사정사 승인이 필요합니다</div><div class="kv"><span class="kv-label">피해 내용</span><span class="kv-val">엘리베이터 낙상 사고</span></div><div class="kv"><span class="kv-label">AI 산출액</span><span class="kv-val" style="color:var(--green);font-size:15px">1,240,000원</span></div><div class="kv"><span class="kv-label">신뢰도</span><span class="kv-val" style="color:var(--green)">98.3%</span></div><div class="kv" style="border:none"><span class="kv-label">대기 시간</span><span class="kv-val" style="color:var(--red)">18시간 초과</span></div>`,actions:`<button class="btn btn-g" style="flex:1;justify-content:center" onclick="go('approve')">지금 승인</button><button class="btn btn-s" onclick="go('type-c')">상세 보기</button>`},
+  'clm0243':{badge:'<span class="badge ba">TYPE A — 하자소송</span>',title:'송도더샵 A동 201호',sub:'CLM-0243 · 2026-03-12 10:12',body:`<div class="kv"><span class="kv-label">피해 내용</span><span class="kv-val">시공 하자 — 바닥 침하</span></div><div class="kv"><span class="kv-label">신뢰도</span><span class="kv-val" style="color:var(--amber)">88.7%</span></div><div class="kv"><span class="kv-label">처리</span><span class="status-pill s-transfer">소송 이관</span></div><div class="kv" style="border:none"><span class="kv-label">단지 소송</span><span class="kv-val" style="color:var(--p)">진행 중</span></div>`,actions:`<button class="btn btn-p" style="flex:1;justify-content:center" onclick="go('type-a')">소송 현황 보기</button>`},
+  'clm0242':{badge:'<span class="badge bb">TYPE B — 완료</span>',title:'분당파크뷰 502호',sub:'CLM-0242 · 2026-03-11 09:03',body:`<div class="kv"><span class="kv-label">피해 내용</span><span class="kv-val">바닥재 파손</span></div><div class="kv"><span class="kv-label">결과</span><span class="kv-val">면책 · 종결</span></div><div class="kv" style="border:none"><span class="kv-label">의견서</span><span class="status-pill s-done">발송 완료</span></div>`,actions:`<button class="btn btn-s" style="flex:1;justify-content:center" onclick="go('opinion')">의견서 확인</button>`},
+};
+function showPreview(id){
+  document.querySelectorAll('.cl-row').forEach(r=>r.style.background=r.dataset.status==='wait'?'#FFFBEB':'');
+  event.currentTarget.style.background='#FFF4F0';
+  const d=pvData[id]; if(!d)return;
+  document.getElementById('previewEmpty').style.display='none';
+  const pc=document.getElementById('previewContent');
+  pc.style.display='flex';
+  document.getElementById('pv-badge').innerHTML=d.badge;
+  document.getElementById('pv-title').textContent=d.title;
+  document.getElementById('pv-num').textContent=d.sub;
+  document.getElementById('pv-body').innerHTML=d.body;
+  document.getElementById('pv-actions').innerHTML=d.actions;
+}
+function closePreview(){
+  document.getElementById('previewEmpty').style.display='flex';
+  document.getElementById('previewContent').style.display='none';
+  document.querySelectorAll('.cl-row').forEach(r=>r.style.background=r.dataset.status==='wait'?'#FFFBEB':'');
+}
+const faceStates=['2026-03-13 법률 의견서와 함께 면책 사유 발송 완료. 이의신청 기한: 30일','이의신청이 수신되었습니다. APT Insurance 법무팀 검토 중입니다.','APT Insurance 법무팀이 이의신청을 재검토하고 있습니다. 추가 서류가 요청될 수 있습니다.','최종 종결 처리되었습니다. 청구인에게 최종 결정 통보가 발송되었습니다.'];
+function setFaceState(idx,el){document.querySelectorAll('.sf-item').forEach(s=>s.classList.remove('active'));el.classList.add('active');document.getElementById('faceStateDetail').textContent=faceStates[idx];}
+const estVals={1:79100,2:124700,3:104900,4:42700};
+const estOn={1:true,2:true,3:true,4:false};
+function toggleEst(cb,id){
+  const tr=cb.closest('tr');estOn[id]=!estOn[id];
+  if(estOn[id]){cb.classList.add('on');cb.textContent='✓';tr.querySelectorAll('td').forEach(td=>{td.style.color='';td.style.textDecoration='';});}
+  else{cb.classList.remove('on');cb.textContent='';tr.querySelectorAll('td:not(:first-child)').forEach(td=>{td.style.color='#9CA3AF';td.style.textDecoration='line-through';});}
+  let sub=0;[1,2,3,4].forEach(i=>{if(estOn[i])sub+=estVals[i];});
+  const indirect=Math.round(sub*.105);const total=sub+indirect;
+  document.getElementById('estTotal').textContent=total.toLocaleString()+'원';
+  document.getElementById('estFinal').textContent=Math.max(0,total-60150-30000).toLocaleString()+'원';
+}
+function selOpt(n){[1,2,3].forEach(i=>{document.getElementById('ropt'+i).classList.remove('sel');const d=document.getElementById('rc'+i);d.classList.remove('on');d.style.removeProperty('background');});document.getElementById('ropt'+n).classList.add('sel');document.getElementById('rc'+n).classList.add('on');}
+function doApprove(){
+  document.getElementById('tl-fd').className='tl-dot tl-done';
+  document.getElementById('tl-fd').innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>';
+  document.getElementById('tl-ft').textContent='최종 승인 완료';
+  document.getElementById('tl-ft2').textContent='2026-03-14 '+new Date().toTimeString().slice(0,5);
+  showModal('지급 확정 완료','607,850원 지급이 확정되었습니다. 청구인에게 SMS 알림이 발송되며 영업일 3일 이내 입금됩니다.\n\n총 처리 시간: 22분');
+}
+function showModal(title,sub){document.getElementById('modalTitle').textContent=title;document.getElementById('modalSub').textContent=sub;document.getElementById('modalBg').classList.add('on');}
+function closeModal(){document.getElementById('modalBg').classList.remove('on');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';setTimeout(()=>t.style.opacity='0',2800);}
+
+// 품셈 데이터
+var costData=[
+{name:'도배공사(실크)',unit:'m2',price:'12,000',note:''},
+{name:'도배공사(합지)',unit:'m2',price:'8,500',note:''},
+{name:'장판교체',unit:'m2',price:'15,000',note:''},
+{name:'도장공사',unit:'m2',price:'8,500',note:''},
+{name:'방수공사',unit:'m2',price:'35,000',note:'우레탄 도막'},
+{name:'타일공사',unit:'m2',price:'45,000',note:'철거+시공'},
+{name:'배관공사(동파이프)',unit:'m',price:'28,000',note:''},
+{name:'배관공사(PVC)',unit:'m',price:'18,000',note:''},
+{name:'금속 M-bar 천장',unit:'m2',price:'42,000',note:'최신공법 반영'},
+{name:'전기배선',unit:'식',price:'450,000',note:'1실 기준'},
+{name:'창호수리',unit:'개소',price:'180,000',note:''},
+{name:'목공사',unit:'식',price:'320,000',note:'목재→M-bar 전환 검토'},
+{name:'잡공사',unit:'식',price:'250,000',note:''},
+];
+function renderCost(){var t=document.getElementById('cost-tbody');if(!t)return;t.innerHTML=costData.map(function(c){return '<tr style="border-bottom:1px solid var(--b)"><td style="padding:10px;font-weight:500">'+c.name+'</td><td style="padding:10px;font-size:13px;color:var(--s)">'+c.unit+'</td><td style="padding:10px;text-align:right;font-weight:600">'+c.price+'</td><td style="padding:10px;font-size:12px;color:var(--s)">'+c.note+'</td></tr>';}).join('');}
+function filterCost(){var q=document.getElementById('cost-search').value.toLowerCase();var t=document.getElementById('cost-tbody');t.innerHTML=costData.filter(function(c){return c.name.toLowerCase().includes(q)||c.note.toLowerCase().includes(q)}).map(function(c){return '<tr style="border-bottom:1px solid var(--b)"><td style="padding:10px;font-weight:500">'+c.name+'</td><td style="padding:10px;font-size:13px;color:var(--s)">'+c.unit+'</td><td style="padding:10px;text-align:right;font-weight:600">'+c.price+'</td><td style="padding:10px;font-size:12px;color:var(--s)">'+c.note+'</td></tr>';}).join('');}
+renderCost();
 </script>
 </body>
 </html>
