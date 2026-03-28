@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>보험 하자접수 어드민</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#111;background:#f4f4f4;display:flex;height:100vh;overflow:hidden}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+
+/* Sidebar */
+#sidebar{width:240px;min-width:240px;background:#fafafa;border-right:1px solid #e8e8e8;display:flex;flex-direction:column;height:100vh}
+.sidebar-logo{padding:20px 24px;border-bottom:1px solid #e8e8e8}
+.sidebar-logo .brand{font-size:16px;font-weight:700;color:#FF6B35}
+.sidebar-logo .sub{font-size:11px;color:#888;margin-top:2px}
+nav{flex:1;padding:12px 0;overflow-y:auto}
+nav a{display:flex;align-items:center;gap:10px;padding:10px 24px;color:#444;font-size:13px;transition:all .15s;border-left:3px solid transparent}
+nav a:hover{background:#f0f0f0;color:#111}
+nav a.active{background:#fff4f0;color:#FF6B35;border-left-color:#FF6B35;font-weight:600}
+nav a .icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.sidebar-footer{padding:16px 24px;border-top:1px solid #e8e8e8;font-size:12px;color:#aaa}
+
+/* Main */
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{height:56px;background:#fff;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:16px;font-weight:700;flex:1}
+.topbar-badge{background:#FF6B35;color:#fff;font-size:11px;padding:3px 10px;border-radius:20px}
+.content{padding:28px;flex:1}
+
+/* Cards */
+.card{background:#fff;border-radius:10px;border:1px solid #ebebeb;padding:20px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:700;color:#333;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-title span.ct-badge{background:#FF6B35;color:#fff;font-size:10px;padding:2px 7px;border-radius:10px}
+
+/* KPI Grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:10px;border:1px solid #ebebeb;padding:20px}
+.kpi-label{font-size:12px;color:#888;margin-bottom:8px}
+.kpi-val{font-size:28px;font-weight:700;color:#111}
+.kpi-val.orange{color:#FF6B35}
+.kpi-sub{font-size:11px;color:#bbb;margin-top:4px}
+
+/* Table */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;color:#888;font-weight:600;padding:8px 12px;border-bottom:2px solid #f0f0f0}
+td{padding:10px 12px;border-bottom:1px solid #f5f5f5;font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+
+/* Status badges */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-new{background:#fff3e0;color:#e65100}
+.badge-proc{background:#e3f2fd;color:#1565c0}
+.badge-done{background:#e8f5e9;color:#2e7d32}
+.badge-field{background:#f3e5f5;color:#6a1b9a}
+.badge-cancel{background:#fafafa;color:#888}
+
+/* Filter tabs */
+.tab-bar{display:flex;gap:6px;margin-bottom:16px}
+.tab{padding:7px 16px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;font-size:13px;color:#555;font-weight:500}
+.tab.active{background:#FF6B35;color:#fff;border-color:#FF6B35}
+.tab:hover:not(.active){background:#f5f5f5}
+
+/* Bar chart */
+.bar-chart{display:flex;align-items:flex-end;gap:10px;height:100px;padding:8px 0}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar{width:100%;background:#FF6B35;border-radius:4px 4px 0 0;transition:height .3s}
+.bar-label{font-size:11px;color:#888}
+.bar-val{font-size:11px;font-weight:600;color:#333}
+
+/* Btn */
+.btn{display:inline-block;padding:9px 18px;border-radius:7px;font-size:13px;font-weight:600;border:none}
+.btn-orange{background:#FF6B35;color:#fff}
+.btn-orange:hover{background:#e55c28}
+.btn-outline{background:#fff;color:#FF6B35;border:1px solid #FF6B35}
+.btn-outline:hover{background:#fff4f0}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-gray{background:#f0f0f0;color:#555;border:none}
+.btn-gray:hover{background:#e5e5e5}
+
+/* Grid 2col */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* Compensation card */
+.ai-card{background:linear-gradient(135deg,#fff4f0,#fff);border:1px solid #ffd0bc;border-radius:10px;padding:20px;margin-bottom:16px}
+.ai-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ai-card-title{font-size:14px;font-weight:700;color:#333}
+.ai-tag{background:#FF6B35;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px}
+.ai-total{font-size:22px;font-weight:700;color:#FF6B35;margin-bottom:4px}
+.ai-sub{font-size:12px;color:#888}
+.note{font-size:11px;color:#999;margin-top:8px;padding:10px;background:#f9f9f9;border-radius:6px;line-height:1.6}
+.note strong{color:#555}
+
+/* Owner/Tenant split */
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.split-card{border-radius:8px;padding:14px;border:1px solid #eee}
+.split-card.owner{border-left:3px solid #FF6B35}
+.split-card.tenant{border-left:3px solid #1976d2}
+.split-title{font-size:12px;font-weight:700;color:#555;margin-bottom:8px}
+.split-amount{font-size:18px;font-weight:700}
+.split-amount.orange{color:#FF6B35}
+.split-amount.blue{color:#1976d2}
+
+/* Search input */
+.search-wrap{display:flex;gap:8px;margin-bottom:14px}
+.search-input{flex:1;padding:8px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;outline:none}
+.search-input:focus{border-color:#FF6B35}
+
+/* Placeholder */
+.placeholder-card{background:#fff;border-radius:10px;border:1px solid #ebebeb;padding:40px;text-align:center;color:#bbb}
+.placeholder-card .ph-icon{font-size:36px;margin-bottom:12px}
+.placeholder-card .ph-title{font-size:15px;font-weight:600;color:#ccc;margin-bottom:6px}
+.placeholder-card .ph-desc{font-size:13px;color:#ddd}
+
+/* Pager / row count */
+.table-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:#aaa;padding-top:8px;border-top:1px solid #f0f0f0}
+
+/* section hidden */
+.section{display:none}
+.section.active{display:block}
+
+/* responsive fallback */
+@media(max-width:900px){.kpi-grid{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">InureTech Admin</div>
+    <div class="sub">보험 하자접수 관리시스템</div>
+  </div>
+  <nav>
+    <a href="#" class="active" data-sec="dashboard">
+      <span class="icon">&#9632;</span> 대시보드
+    </a>
+    <a href="#" data-sec="reception">
+      <span class="icon">&#9656;</span> 접수관리
+    </a>
+    <a href="#" data-sec="compensation">
+      <span class="icon">&#9675;</span> 보상산정
+    </a>
+    <a href="#" data-sec="pricebook">
+      <span class="icon">&#9671;</span> 품셈관리
+    </a>
+    <a href="#" data-sec="insurance">
+      <span class="icon">&#9670;</span> 보험연계
+    </a>
+    <a href="#" data-sec="fieldsurvey">
+      <span class="icon">&#9677;</span> 현장조사
+    </a>
+    <a href="#" data-sec="subrogation">
+      <span class="icon">&#9668;</span> 구상권
+    </a>
+    <a href="#" data-sec="deductible">
+      <span class="icon">&#9674;</span> 자기부담금
+    </a>
+    <a href="#" data-sec="settings">
+      <span class="icon">&#9881;</span> 설정
+    </a>
+  </nav>
+  <div class="sidebar-footer">v2.4.1 &nbsp;|&nbsp; 2026-03-28</div>
+</div>
+
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">대시보드</div>
+    <span class="topbar-badge">관리자</span>
+    <span style="font-size:12px;color:#aaa">홍길동</span>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="section active" id="sec-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">금일 접수</div>
+          <div class="kpi-val orange">3</div>
+          <div class="kpi-sub">전일 대비 +1</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">처리 중</div>
+          <div class="kpi-val">8</div>
+          <div class="kpi-sub">평균 처리일 4.2일</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">보상 완료</div>
+          <div class="kpi-val">45</div>
+          <div class="kpi-sub">이번 달 누계</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">현장조사</div>
+          <div class="kpi-val orange">2</div>
+          <div class="kpi-sub">오늘 예정</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;margin-bottom:16px;align-items:flex-start">
+        <div class="card" style="flex:2">
+          <div class="card-title">최근 접수 현황</div>
+          <table>
+            <thead>
+              <tr><th>번호</th><th>유형</th><th>위치</th><th>접수일</th><th>상태</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>#2026-0328</td><td>누수</td><td>강남구 역삼동 501호</td><td>2026-03-28</td><td><span class="badge badge-new">신규</span></td></tr>
+              <tr><td>#2026-0327</td><td>화재</td><td>마포구 합정동 302호</td><td>2026-03-27</td><td><span class="badge badge-proc">처리중</span></td></tr>
+              <tr><td>#2026-0325</td><td>파손</td><td>송파구 잠실동 1001호</td><td>2026-03-25</td><td><span class="badge badge-field">현장조사</span></td></tr>
+              <tr><td>#2026-0322</td><td>누수</td><td>서초구 방배동 201호</td><td>2026-03-22</td><td><span class="badge badge-proc">처리중</span></td></tr>
+              <tr><td>#2026-0320</td><td>파손</td><td>용산구 이태원동 105호</td><td>2026-03-20</td><td><span class="badge badge-done">완료</span></td></tr>
+            </tbody>
+          </table>
+          <div class="table-foot"><span>총 56건</span><span>1 / 12 페이지</span></div>
+        </div>
+
+        <div class="card" style="flex:1">
+          <div class="card-title">월별 접수 추이 <span class="ct-badge">최근 6개월</span></div>
+          <div class="bar-chart" id="barchart"></div>
+          <div style="margin-top:14px">
+            <button class="btn btn-orange btn-sm" onclick="alert('품셈 DB 최신화를 확인합니다.\n\n최종 업데이트: 2026-03-15\n현재 버전: 2026년 1분기 기준\n상태: 정상')">품셈 최신화 확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECEPTION -->
+    <div class="section" id="sec-reception">
+      <div class="tab-bar" id="filter-tabs">
+        <button class="tab active" data-filter="all">전체 (8)</button>
+        <button class="tab" data-filter="leak">누수 (3)</button>
+        <button class="tab" data-filter="fire">화재 (2)</button>
+        <button class="tab" data-filter="damage">파손 (3)</button>
+      </div>
+      <div class="card">
+        <div class="card-title">접수 목록</div>
+        <table>
+          <thead>
+            <tr><th>번호</th><th>유형</th><th>위치</th><th>피해자구분</th><th>상태</th><th>접수일</th><th>처리</th></tr>
+          </thead>
+          <tbody id="reception-tbody"></tbody>
+        </table>
+        <div class="table-foot"><span>총 8건</span><span>
+          <button class="btn btn-gray btn-sm">이전</button>
+          &nbsp;<button class="btn btn-gray btn-sm">다음</button>
+        </span></div>
+      </div>
+    </div>
+
+    <!-- COMPENSATION -->
+    <div class="section" id="sec-compensation">
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <div class="ai-card-title">AI 보상산정 결과</div>
+          <span class="ai-tag">AI 산정</span>
+        </div>
+        <div class="ai-total">4,820,000 원</div>
+        <div class="ai-sub">사건번호: #2026-0325 &nbsp;|&nbsp; 파손 &nbsp;|&nbsp; 송파구 잠실동 1001호</div>
+        <div class="note">
+          <strong>법적 근거:</strong> 주택임대차보호법 제8조, 민법 제623조(임대인의 수선의무), 화재로 인한 재해보상과 보험가입에 관한 법률 제4조 적용. 소유자-임차인 손해 구분은 임대차계약서 기준으로 산정하였으며, 원상복구 범위는 보험약관 제12조 제2항에 의거합니다.
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">공종별 산정 항목</div>
+          <table>
+            <thead>
+              <tr><th>공종</th><th>수량</th><th>단가(원)</th><th>금액(원)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>도배공사</td><td>85 m2</td><td>12,000</td><td>1,020,000</td></tr>
+              <tr><td>장판교체</td><td>72 m2</td><td>15,000</td><td>1,080,000</td></tr>
+              <tr><td>도장공사</td><td>40 m2</td><td>8,500</td><td>340,000</td></tr>
+              <tr><td>창호수리</td><td>2 개소</td><td>180,000</td><td>360,000</td></tr>
+              <tr><td>전기배선</td><td>일식</td><td>450,000</td><td>450,000</td></tr>
+              <tr><td>목공사</td><td>일식</td><td>320,000</td><td>320,000</td></tr>
+              <tr><td>잡공사</td><td>일식</td><td>250,000</td><td>250,000</td></tr>
+              <tr><td colspan="3" style="text-align:right;font-weight:700">합계</td><td style="font-weight:700;color:#FF6B35">3,820,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">소유자 / 임차인 분리 산정</div>
+          <div class="split-grid">
+            <div class="split-card owner">
+              <div class="split-title">소유자 부담</div>
+              <div class="split-amount orange">2,690,000 원</div>
+              <div style="font-size:12px;color:#888;margin-top:6px">창호, 전기, 목공, 도장</div>
+            </div>
+            <div class="split-card tenant">
+              <div class="split-title">임차인 부담</div>
+              <div class="split-amount blue">1,130,000 원</div>
+              <div style="font-size:12px;color:#888;margin-top:6px">도배, 장판</div>
+            </div>
+          </div>
+          <div class="note" style="margin-top:14px">
+            <strong>자기부담금 적용 후:</strong> 소유자 2,390,000 원 (공제 300,000 원)<br>
+            <strong>보험지급 예정액:</strong> 4,220,000 원<br>
+            <strong>근거:</strong> 약관 제15조 자기부담금 조항
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn btn-orange btn-sm">산정 확정</button>
+            <button class="btn btn-outline btn-sm">재산정 요청</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICEBOOK -->
+    <div class="section" id="sec-pricebook">
+      <div class="card">
+        <div class="card-title">품셈 단가 관리 <span class="ct-badge">2026년 1분기</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div class="search-wrap" style="margin-bottom:0;flex:1;max-width:300px">
+            <input class="search-input" id="price-search" type="text" placeholder="공종명 검색..." oninput="filterPricebook()">
+          </div>
+          <button class="btn btn-orange btn-sm" onclick="alert('품셈 DB 최신화를 확인합니다.\n\n최종 업데이트: 2026-03-15\n현재 버전: 2026년 1분기\n공종 수: 10개\n상태: 최신')">최신화 확인</button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>번호</th><th>공종</th><th>단위</th><th>단가(원)</th><th>기준년도</th><th>비고</th></tr>
+          </thead>
+          <tbody id="price-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- INSURANCE -->
+    <div class="section" id="sec-insurance">
+      <div class="placeholder-card">
+        <div class="ph-icon">&#9635;</div>
+        <div class="ph-title">보험연계</div>
+        <div class="ph-desc">보험사 API 연동 및 증권 조회 기능이 준비 중입니다.</div>
+      </div>
+      <div class="grid2">
+        <div class="card"><div class="card-title">연계 보험사</div>
+          <table><thead><tr><th>보험사</th><th>연동상태</th><th>마지막 동기화</th></tr></thead>
+          <tbody>
+            <tr><td>삼성화재</td><td><span class="badge badge-done">정상</span></td><td>2026-03-28 09:12</td></tr>
+            <tr><td>현대해상</td><td><span class="badge badge-done">정상</span></td><td>2026-03-28 08:55</td></tr>
+            <tr><td>DB손해보험</td><td><span class="badge badge-proc">점검중</span></td><td>2026-03-27 18:00</td></tr>
+            <tr><td>KB손해보험</td><td><span class="badge badge-done">정상</span></td><td>2026-03-28 09:01</td></tr>
+          </tbody></table>
+        </div>
+        <div class="card"><div class="card-title">최근 조회 이력</div>
+          <table><thead><tr><th>접수번호</th><th>보험사</th><th>조회시각</th></tr></thead>
+          <tbody>
+            <tr><td>#2026-0328</td><td>삼성화재</td><td>10:34</td></tr>
+            <tr><td>#2026-0325</td><td>현대해상</td><td>09:21</td></tr>
+            <tr><td>#2026-0322</td><td>KB손해보험</td><td>어제 16:44</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIELD SURVEY -->
+    <div class="section" id="sec-fieldsurvey">
+      <div class="placeholder-card">
+        <div class="ph-icon">&#9635;</div>
+        <div class="ph-title">현장조사 일정</div>
+        <div class="ph-desc">현장조사 일정 관리 및 조사보고서 기능이 준비 중입니다.</div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="card-title">오늘의 현장조사 일정</div>
+        <table><thead><tr><th>접수번호</th><th>유형</th><th>주소</th><th>담당자</th><th>예정시각</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>#2026-0325</td><td>파손</td><td>송파구 잠실동 1001호</td><td>김민준</td><td>10:00</td><td><span class="badge badge-done">완료</span></td></tr>
+          <tr><td>#2026-0328</td><td>누수</td><td>강남구 역삼동 501호</td><td>이서연</td><td>14:00</td><td><span class="badge badge-new">예정</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- SUBROGATION -->
+    <div class="section" id="sec-subrogation">
+      <div class="placeholder-card">
+        <div class="ph-icon">&#9635;</div>
+        <div class="ph-title">구상권 관리</div>
+        <div class="ph-desc">제3자 귀책 구상권 청구 및 진행 현황 기능이 준비 중입니다.</div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="card-title">구상권 진행 현황</div>
+        <table><thead><tr><th>접수번호</th><th>귀책자</th><th>청구금액</th><th>진행상태</th><th>기일</th></tr></thead>
+        <tbody>
+          <tr><td>#2025-1102</td><td>시공사 (주)한빛건설</td><td>12,500,000</td><td><span class="badge badge-proc">협의중</span></td><td>2026-04-15</td></tr>
+          <tr><td>#2025-0944</td><td>위층 세입자</td><td>3,200,000</td><td><span class="badge badge-done">회수완료</span></td><td>2026-03-10</td></tr>
+          <tr><td>#2026-0210</td><td>배관공사업체</td><td>8,800,000</td><td><span class="badge badge-new">청구예정</span></td><td>2026-04-30</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- DEDUCTIBLE -->
+    <div class="section" id="sec-deductible">
+      <div class="placeholder-card">
+        <div class="ph-icon">&#9635;</div>
+        <div class="ph-title">자기부담금 관리</div>
+        <div class="ph-desc">피보험자 자기부담금 납입 및 정산 기능이 준비 중입니다.</div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="card-title">자기부담금 현황</div>
+        <table><thead><tr><th>접수번호</th><th>피보험자</th><th>부담금액</th><th>납입상태</th><th>납입일</th></tr></thead>
+        <tbody>
+          <tr><td>#2026-0325</td><td>박지훈</td><td>300,000</td><td><span class="badge badge-done">납입완료</span></td><td>2026-03-27</td></tr>
+          <tr><td>#2026-0322</td><td>최수진</td><td>150,000</td><td><span class="badge badge-new">미납</span></td><td>-</td></tr>
+          <tr><td>#2026-0315</td><td>이동현</td><td>200,000</td><td><span class="badge badge-proc">청구중</span></td><td>-</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="section" id="sec-settings">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">시스템 설정</div>
+          <table>
+            <tbody>
+              <tr><td style="color:#888;width:140px">시스템명</td><td>InureTech Admin 2.4.1</td></tr>
+              <tr><td style="color:#888">관리자</td><td>홍길동 (admin@insuretech.kr)</td></tr>
+              <tr><td style="color:#888">자동 알림</td><td><span class="badge badge-done">활성</span></td></tr>
+              <tr><td style="color:#888">품셈 버전</td><td>2026년 1분기</td></tr>
+              <tr><td style="color:#888">AI 산정 모델</td><td>InureTech-AI v3.2</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:14px">
+            <button class="btn btn-orange btn-sm">설정 저장</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">사용자 관리</div>
+          <table><thead><tr><th>이름</th><th>역할</th><th>상태</th></tr></thead>
+          <tbody>
+            <tr><td>홍길동</td><td>관리자</td><td><span class="badge badge-done">활성</span></td></tr>
+            <tr><td>김민준</td><td>현장조사</td><td><span class="badge badge-done">활성</span></td></tr>
+            <tr><td>이서연</td><td>보상담당</td><td><span class="badge badge-done">활성</span></td></tr>
+            <tr><td>박정호</td><td>보상담당</td><td><span class="badge badge-cancel">비활성</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// --- Data ---
+var receptionData = [
+  {id:'#2026-0328',type:'누수',filter:'leak',loc:'강남구 역삼동 501호',victim:'임차인',status:'신규',statusCls:'badge-new',date:'2026-03-28'},
+  {id:'#2026-0327',type:'화재',filter:'fire',loc:'마포구 합정동 302호',victim:'소유자',status:'처리중',statusCls:'badge-proc',date:'2026-03-27'},
+  {id:'#2026-0325',type:'파손',filter:'damage',loc:'송파구 잠실동 1001호',victim:'임차인',status:'현장조사',statusCls:'badge-field',date:'2026-03-25'},
+  {id:'#2026-0322',type:'누수',filter:'leak',loc:'서초구 방배동 201호',victim:'소유자',status:'처리중',statusCls:'badge-proc',date:'2026-03-22'},
+  {id:'#2026-0320',type:'파손',filter:'damage',loc:'용산구 이태원동 105호',victim:'임차인',status:'완료',statusCls:'badge-done',date:'2026-03-20'},
+  {id:'#2026-0318',type:'화재',filter:'fire',loc:'종로구 창신동 208호',victim:'소유자',status:'완료',statusCls:'badge-done',date:'2026-03-18'},
+  {id:'#2026-0315',type:'누수',filter:'leak',loc:'강북구 미아동 301호',victim:'임차인',status:'처리중',statusCls:'badge-proc',date:'2026-03-15'},
+  {id:'#2026-0310',type:'파손',filter:'damage',loc:'동작구 상도동 102호',victim:'소유자',status:'완료',statusCls:'badge-done',date:'2026-03-10'}
+];
+
+var pricebookData = [
+  {no:1,name:'도배공사',unit:'m2',price:'12,000',year:'2026',note:'벽지 포함'},
+  {no:2,name:'장판교체',unit:'m2',price:'15,000',year:'2026',note:'장판재 포함'},
+  {no:3,name:'도장공사',unit:'m2',price:'8,500',year:'2026',note:'페인트 포함'},
+  {no:4,name:'타일공사',unit:'m2',price:'45,000',year:'2026',note:'줄눈 포함'},
+  {no:5,name:'창호수리',unit:'개소',price:'180,000',year:'2026',note:'하드웨어 포함'},
+  {no:6,name:'전기배선',unit:'일식',price:'450,000',year:'2026',note:'재료비 별도'},
+  {no:7,name:'배관공사',unit:'m',price:'35,000',year:'2026',note:'자재 포함'},
+  {no:8,name:'목공사',unit:'일식',price:'320,000',year:'2026',note:'목재 포함'},
+  {no:9,name:'방수공사',unit:'m2',price:'28,000',year:'2026',note:'우레탄 방수'},
+  {no:10,name:'미장공사',unit:'m2',price:'22,000',year:'2026',note:'시멘트 포함'}
+];
+
+var barData = [
+  {month:'10월',val:32},{month:'11월',val:28},{month:'12월',val:41},
+  {month:'1월',val:35},{month:'2월',val:38},{month:'3월',val:56}
+];
+
+var sectionTitles = {
+  dashboard:'대시보드',reception:'접수관리',compensation:'보상산정',
+  pricebook:'품셈관리',insurance:'보험연계',fieldsurvey:'현장조사',
+  subrogation:'구상권',deductible:'자기부담금',settings:'설정'
+};
+
+// --- Render bar chart ---
+function renderBarChart() {
+  var max = Math.max.apply(null, barData.map(function(d){return d.val}));
+  var el = document.getElementById('barchart');
+  el.innerHTML = barData.map(function(d) {
+    var h = Math.round((d.val / max) * 80);
+    return '<div class="bar-wrap"><div class="bar-val">'+d.val+'</div><div class="bar" style="height:'+h+'px"></div><div class="bar-label">'+d.month+'</div></div>';
+  }).join('');
+}
+
+// --- Render reception table ---
+function renderReception(filter) {
+  var rows = filter === 'all' ? receptionData : receptionData.filter(function(r){return r.filter===filter});
+  var tbody = document.getElementById('reception-tbody');
+  tbody.innerHTML = rows.map(function(r) {
+    return '<tr><td>'+r.id+'</td><td>'+r.type+'</td><td>'+r.loc+'</td><td>'+r.victim+'</td><td><span class="badge '+r.statusCls+'">'+r.status+'</span></td><td>'+r.date+'</td><td><button class="btn btn-gray btn-sm">상세</button></td></tr>';
+  }).join('');
+}
+
+// --- Render pricebook ---
+function renderPricebook(q) {
+  var data = q ? pricebookData.filter(function(p){return p.name.indexOf(q) !== -1}) : pricebookData;
+  var tbody = document.getElementById('price-tbody');
+  tbody.innerHTML = data.map(function(p) {
+    return '<tr><td>'+p.no+'</td><td>'+p.name+'</td><td>'+p.unit+'</td><td>'+p.price+'</td><td>'+p.year+'년 1분기</td><td>'+p.note+'</td></tr>';
+  }).join('');
+}
+
+function filterPricebook() {
+  renderPricebook(document.getElementById('price-search').value.trim());
+}
+
+// --- SPA navigation ---
+function navigate(sec) {
+  document.querySelectorAll('.section').forEach(function(el){el.classList.remove('active')});
+  document.querySelectorAll('nav a').forEach(function(el){el.classList.remove('active')});
+  var target = document.getElementById('sec-'+sec);
+  if (target) target.classList.add('active');
+  var link = document.querySelector('nav a[data-sec="'+sec+'"]');
+  if (link) link.classList.add('active');
+  document.getElementById('page-title').textContent = sectionTitles[sec] || sec;
+}
+
+document.querySelectorAll('nav a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    navigate(this.getAttribute('data-sec'));
+  });
+});
+
+// Filter tabs
+document.getElementById('filter-tabs').addEventListener('click', function(e) {
+  var btn = e.target.closest('.tab');
+  if (!btn) return;
+  document.querySelectorAll('#filter-tabs .tab').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+  renderReception(btn.getAttribute('data-filter'));
+});
+
+// Init
+renderBarChart();
+renderReception('all');
+renderPricebook();
+</script>
+</body>
+</html>
