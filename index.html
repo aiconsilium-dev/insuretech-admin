@@ -18,6 +18,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;f
 .sidebar-menu li:hover{background:#fafafa;color:#111;}
 .sidebar-menu li.active{background:#FFF4F0;color:#FF6B35;font-weight:600;}
 .sidebar-menu li .menu-label{font-size:10px;color:#aaa;display:block;margin-top:2px;font-weight:400;}
+.sidebar-divider{height:1px;background:#e5e7eb;margin:8px 16px;}
 
 /* Mobile toggle */
 .mobile-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:18px;}
@@ -25,13 +26,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;f
 
 /* Main */
 .main{margin-left:240px;flex:1;padding:32px;min-height:100vh;}
-.page{display:none;}
+.page{display:none;animation:fadeIn .3s ease;}
 .page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 .page-title{font-size:22px;font-weight:700;margin-bottom:8px;}
 .page-desc{font-size:13px;color:#888;margin-bottom:28px;}
 
 /* Cards */
-.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:24px;margin-bottom:20px;}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:24px;margin-bottom:20px;transition:box-shadow .2s,transform .2s;}
+.card-hover:hover{box-shadow:0 8px 25px rgba(0,0,0,.08);transform:translateY(-2px);}
+.card-clickable{cursor:pointer;}
 .card-grid{display:grid;gap:20px;}
 .card-grid-4{grid-template-columns:repeat(4,1fr);}
 .card-grid-3{grid-template-columns:repeat(3,1fr);}
@@ -42,21 +46,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;f
 .kpi-label{font-size:12px;color:#888;margin-top:6px;}
 .kpi-sub{font-size:11px;color:#aaa;margin-top:4px;}
 
-/* Badges */
+/* KPI mini cards */
+.kpi-mini{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+.kpi-mini-card{flex:1;min-width:140px;padding:16px 20px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;text-align:center;transition:box-shadow .2s,transform .2s;}
+.kpi-mini-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06);transform:translateY(-1px);}
+.kpi-mini-card .kpi-mini-num{font-size:28px;font-weight:700;line-height:1.2;}
+.kpi-mini-card .kpi-mini-label{font-size:11px;color:#888;margin-top:4px;}
+
+/* Badges — unified status pills */
 .badge{display:inline-block;padding:3px 12px;border-radius:100px;font-size:11px;font-weight:600;}
 .badge-a{background:#FEF2F2;color:#DC2626;}
 .badge-b{background:#F5F5F5;color:#666;}
 .badge-c{background:#FFF4F0;color:#FF6B35;}
 .badge-status{display:inline-block;padding:3px 12px;border-radius:100px;font-size:11px;font-weight:500;}
-.st-접수{background:#EFF6FF;color:#2563EB;}
-.st-조사중{background:#FFF4F0;color:#FF6B35;}
-.st-산출완료{background:#F0FDF4;color:#16A34A;}
+/* Unified status pill colors */
+.st-접수{background:#FFF4F0;color:#FF6B35;}
+.st-조사중{background:#EFF6FF;color:#2563EB;}
+.st-진행중{background:#EFF6FF;color:#2563EB;}
+.st-적산중{background:#EFF6FF;color:#2563EB;}
+.st-산출완료{background:#ECFDF5;color:#059669;}
 .st-면책검토{background:#FEF2F2;color:#DC2626;}
-.st-승인대기{background:#FFFBEB;color:#D97706;}
-.st-완료{background:#F0FDF4;color:#16A34A;}
-.st-협상중{background:#FFF4F0;color:#FF6B35;}
-.st-청구완료{background:#F0FDF4;color:#16A34A;}
+.st-승인대기{background:#FEF2F2;color:#DC2626;}
+.st-완료{background:#ECFDF5;color:#059669;}
+.st-지급완료{background:#ECFDF5;color:#059669;}
+.st-협상중{background:#EFF6FF;color:#2563EB;}
+.st-청구완료{background:#ECFDF5;color:#059669;}
 .st-소송진행{background:#FEF2F2;color:#DC2626;}
+.st-발송완료{background:#ECFDF5;color:#059669;}
+.st-미발송{background:#FEF2F2;color:#DC2626;}
+.st-대기{background:#FEF2F2;color:#DC2626;}
+.st-종결{background:#ECFDF5;color:#059669;}
 
 /* Buttons */
 .btn{display:inline-block;padding:8px 20px;border-radius:100px;border:1px solid #e5e7eb;background:#fff;color:#111;font-size:13px;cursor:pointer;transition:all .15s;font-weight:500;}
@@ -68,6 +87,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;f
 .btn-outline-orange:hover{background:#FFF4F0;}
 .btn-danger{background:#DC2626;color:#fff;border-color:#DC2626;}
 .btn-danger:hover{background:#B91C1C;}
+.btn-blue{background:#2563EB;color:#fff;border-color:#2563EB;}
+.btn-blue:hover{background:#1D4ED8;}
+.btn-green{background:#059669;color:#fff;border-color:#059669;}
+.btn-green:hover{background:#047857;}
 
 /* Tables */
 table{width:100%;border-collapse:collapse;}
@@ -75,22 +98,24 @@ th{text-align:left;padding:10px 14px;font-size:12px;font-weight:600;color:#666;b
 td{padding:10px 14px;border-bottom:1px solid #f0f0f0;font-size:13px;vertical-align:middle;}
 tr:hover td{background:#fafafa;}
 tr.clickable{cursor:pointer;}
+tr.clickable:hover td{background:#FFF4F0;}
 
 /* Alert cards */
-.alert-card{border-left:4px solid #FF6B35;padding:16px 20px;background:#fff;border-radius:0 14px 14px 0;border-top:1px solid #e5e7eb;border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:12px;}
+.alert-card{border-left:4px solid #FF6B35;padding:16px 20px;background:#fff;border-radius:0 14px 14px 0;border-top:1px solid #e5e7eb;border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:12px;transition:box-shadow .2s;cursor:pointer;}
+.alert-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06);}
 .alert-card .alert-title{font-weight:600;font-size:14px;margin-bottom:4px;}
 .alert-card .alert-desc{font-size:12px;color:#888;}
 
 /* Progress tracker */
 .tracker{display:flex;align-items:center;gap:0;margin:16px 0;}
 .tracker-step{display:flex;align-items:center;gap:8px;font-size:12px;color:#aaa;}
-.tracker-step.done{color:#16A34A;font-weight:600;}
+.tracker-step.done{color:#059669;font-weight:600;}
 .tracker-step.current{color:#FF6B35;font-weight:600;}
 .tracker-dot{width:24px;height:24px;border-radius:50%;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
-.tracker-step.done .tracker-dot{background:#16A34A;border-color:#16A34A;color:#fff;}
+.tracker-step.done .tracker-dot{background:#059669;border-color:#059669;color:#fff;}
 .tracker-step.current .tracker-dot{background:#FF6B35;border-color:#FF6B35;color:#fff;}
 .tracker-line{width:32px;height:2px;background:#e5e7eb;margin:0 4px;}
-.tracker-line.done{background:#16A34A;}
+.tracker-line.done{background:#059669;}
 
 /* Ratio bar */
 .ratio-bar{display:flex;height:32px;border-radius:8px;overflow:hidden;margin:12px 0;}
@@ -105,11 +130,12 @@ tr.clickable{cursor:pointer;}
 .filter-select:focus{border-color:#FF6B35;}
 
 /* Expandable card */
-.exp-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s;}
+.exp-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s,box-shadow .2s;}
+.exp-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06);}
 .exp-header{padding:16px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;justify-content:space-between;}
 .exp-header:hover{background:#fafafa;}
 .exp-body{display:none;padding:0 24px 20px;border-top:1px solid #f0f0f0;}
-.exp-body.open{display:block;padding-top:20px;}
+.exp-body.open{display:block;padding-top:20px;animation:fadeIn .2s ease;}
 .exp-photos{display:flex;gap:12px;margin:12px 0;}
 .exp-photo{width:120px;height:80px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#aaa;border:1px dashed #ddd;}
 
@@ -124,8 +150,8 @@ tr.clickable{cursor:pointer;}
 .search-input:focus{border-color:#FF6B35;}
 
 /* Flow steps */
-.flow{display:flex;gap:0;align-items:center;margin:16px 0;}
-.flow-step{padding:8px 16px;background:#f5f5f5;border-radius:100px;font-size:12px;color:#666;font-weight:500;}
+.flow{display:flex;gap:0;align-items:center;margin:16px 0;flex-wrap:wrap;}
+.flow-step{padding:8px 16px;background:#f5f5f5;border-radius:100px;font-size:12px;color:#666;font-weight:500;transition:all .2s;}
 .flow-step.active{background:#FF6B35;color:#fff;}
 .flow-arrow{margin:0 6px;color:#ccc;font-size:12px;}
 
@@ -133,12 +159,39 @@ tr.clickable{cursor:pointer;}
 .countdown{font-size:13px;color:#DC2626;font-weight:600;}
 
 /* Insurance priority */
-.priority-flow{display:flex;align-items:center;gap:12px;margin:16px 0;}
-.priority-box{padding:12px 20px;border-radius:14px;border:2px solid #e5e7eb;font-size:13px;font-weight:600;text-align:center;min-width:100px;}
+.priority-flow{display:flex;align-items:center;gap:12px;margin:16px 0;flex-wrap:wrap;}
+.priority-box{padding:12px 20px;border-radius:14px;border:2px solid #e5e7eb;font-size:13px;font-weight:600;text-align:center;min-width:100px;transition:transform .2s;}
+.priority-box:hover{transform:scale(1.02);}
 .priority-box.p1{border-color:#FF6B35;color:#FF6B35;background:#FFF4F0;}
 .priority-box.p2{border-color:#2563EB;color:#2563EB;background:#EFF6FF;}
 .priority-box.p3{border-color:#666;color:#666;background:#F5F5F5;}
 .priority-arrow{font-size:16px;color:#ccc;}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;animation:fadeIn .2s ease;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:16px;width:90%;max-width:800px;max-height:85vh;overflow-y:auto;padding:32px;position:relative;animation:modalSlideIn .3s ease;}
+@keyframes modalSlideIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.modal-close{position:absolute;top:16px;right:20px;font-size:24px;cursor:pointer;color:#888;background:none;border:none;line-height:1;}
+.modal-close:hover{color:#111;}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.modal-subtitle{font-size:13px;color:#888;margin-bottom:20px;}
+
+/* Detail section */
+.detail-section{margin-bottom:20px;}
+.detail-section-title{font-size:14px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #f0f0f0;color:#333;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:13px;margin-bottom:12px;}
+.detail-grid .label{color:#888;}
+.detail-grid .value{font-weight:500;}
+
+/* Insurance tag */
+.ins-tag{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:500;margin:2px 4px 2px 0;}
+.ins-cgl{background:#FFF4F0;color:#FF6B35;}
+.ins-fire{background:#FEF2F2;color:#DC2626;}
+.ins-prop{background:#EFF6FF;color:#2563EB;}
+
+/* Counter animation */
+.counter-animate{transition:all .3s ease;}
 
 /* Responsive */
 @media(max-width:768px){
@@ -151,6 +204,9 @@ tr.clickable{cursor:pointer;}
   .exp-photos{flex-wrap:wrap;}
   table{font-size:12px;}
   th,td{padding:8px 10px;}
+  .modal{width:95%;padding:20px;}
+  .kpi-mini{flex-direction:column;}
+  .detail-grid{grid-template-columns:1fr;}
 }
 @media(min-width:769px) and (max-width:1100px){
   .card-grid-4{grid-template-columns:repeat(2,1fr);}
@@ -168,9 +224,12 @@ tr.clickable{cursor:pointer;}
   <ul class="sidebar-menu" id="sidebarMenu">
     <li class="active" onclick="go('dashboard')">대시보드</li>
     <li onclick="go('all')">전체 접수</li>
+    <li onclick="go('complex')">단지 관리<span class="menu-label">아파트 단지</span></li>
+    <div class="sidebar-divider"></div>
     <li onclick="go('typeA')">TYPE A<span class="menu-label">시공사 하자</span></li>
     <li onclick="go('typeB')">TYPE B<span class="menu-label">면책 관리</span></li>
     <li onclick="go('typeC')">TYPE C<span class="menu-label">보험금 산출</span></li>
+    <div class="sidebar-divider"></div>
     <li onclick="go('estimation')">적산 검토</li>
     <li onclick="go('inspection')">현장조사</li>
     <li onclick="go('costdb')">품셈/단가</li>
@@ -178,6 +237,14 @@ tr.clickable{cursor:pointer;}
     <li onclick="go('subrogation')">구상권</li>
   </ul>
 </nav>
+
+<!-- Modal container -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
 
 <div class="main">
 
@@ -187,24 +254,24 @@ tr.clickable{cursor:pointer;}
   <div class="page-desc">하자접수 현황 및 AI 분석 요약</div>
 
   <div class="card-grid card-grid-4">
-    <div class="card">
+    <div class="card card-hover card-clickable" onclick="go('all')">
       <div class="kpi-label">전체 접수</div>
-      <div class="kpi-num">247</div>
+      <div class="kpi-num" data-counter="247">0</div>
       <div class="kpi-sub">건</div>
     </div>
-    <div class="card">
+    <div class="card card-hover card-clickable" onclick="go('typeA')">
       <div class="kpi-label">TYPE A - 시공사 하자</div>
-      <div class="kpi-num" style="color:#DC2626;">38</div>
+      <div class="kpi-num" style="color:#DC2626;" data-counter="38">0</div>
       <div class="kpi-sub">건 (15.4%)</div>
     </div>
-    <div class="card">
+    <div class="card card-hover card-clickable" onclick="go('typeB')">
       <div class="kpi-label">TYPE B - 면책</div>
-      <div class="kpi-num" style="color:#666;">61</div>
+      <div class="kpi-num" style="color:#666;" data-counter="61">0</div>
       <div class="kpi-sub">건 (24.7%)</div>
     </div>
-    <div class="card">
+    <div class="card card-hover card-clickable" onclick="go('typeC')">
       <div class="kpi-label">TYPE C - 보험금 산출</div>
-      <div class="kpi-num" style="color:#FF6B35;">148</div>
+      <div class="kpi-num" style="color:#FF6B35;" data-counter="148">0</div>
       <div class="kpi-sub">건 (59.9%)</div>
     </div>
   </div>
@@ -224,15 +291,15 @@ tr.clickable{cursor:pointer;}
   </div>
 
   <div style="font-size:15px;font-weight:600;margin-bottom:12px;">AI 알림</div>
-  <div class="alert-card">
+  <div class="alert-card" onclick="go('inspection')">
     <div class="alert-title">3건 긴급 현장조사 필요</div>
     <div class="alert-desc">래미안 센트럴파크 외 2건 - 누수 확산 우려로 72시간 내 현장조사 권고</div>
   </div>
-  <div class="alert-card">
+  <div class="alert-card" onclick="go('typeB')">
     <div class="alert-title">2건 면책 기한 임박</div>
     <div class="alert-desc">이의신청 기한 D-3 / D-5 - 자연재해 면책 건 재검토 필요</div>
   </div>
-  <div class="alert-card">
+  <div class="alert-card" onclick="go('costdb')">
     <div class="alert-title">품셈 단가 변동 1건</div>
     <div class="alert-desc">2026년 상반기 표준품셈 고시 반영 - 방수공사 단가 8.2% 상승</div>
   </div>
@@ -244,11 +311,11 @@ tr.clickable{cursor:pointer;}
         <tr><th>번호</th><th>단지명</th><th>유형</th><th>출처</th><th>TYPE</th><th>AI 신뢰도</th><th>상태</th><th>날짜</th></tr>
       </thead>
       <tbody>
-        <tr class="clickable" onclick="go('typeC')"><td>HD-2026-0247</td><td>래미안 센트럴파크</td><td>누수</td><td>입주민</td><td><span class="badge badge-c">TYPE C</span></td><td>94%</td><td><span class="badge-status st-산출완료">산출완료</span></td><td>2026-03-28</td></tr>
-        <tr class="clickable" onclick="go('typeA')"><td>HD-2026-0246</td><td>힐스테이트 위례</td><td>균열</td><td>관리사무소</td><td><span class="badge badge-a">TYPE A</span></td><td>91%</td><td><span class="badge-status st-조사중">조사중</span></td><td>2026-03-27</td></tr>
-        <tr class="clickable" onclick="go('typeB')"><td>HD-2026-0245</td><td>자이 하늘채</td><td>결로</td><td>입주민</td><td><span class="badge badge-b">TYPE B</span></td><td>88%</td><td><span class="badge-status st-면책검토">면책검토</span></td><td>2026-03-27</td></tr>
-        <tr class="clickable" onclick="go('typeC')"><td>HD-2026-0244</td><td>푸르지오 시티</td><td>도배 손상</td><td>입주민</td><td><span class="badge badge-c">TYPE C</span></td><td>96%</td><td><span class="badge-status st-승인대기">승인대기</span></td><td>2026-03-26</td></tr>
-        <tr class="clickable" onclick="go('typeA')"><td>HD-2026-0243</td><td>e편한세상 금빛</td><td>침하</td><td>관리사무소</td><td><span class="badge badge-a">TYPE A</span></td><td>87%</td><td><span class="badge-status st-접수">접수</span></td><td>2026-03-26</td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0247','C')"><td>HD-2026-0247</td><td>래미안 센트럴파크</td><td>누수</td><td>입주민</td><td><span class="badge badge-c">TYPE C</span></td><td>94%</td><td><span class="badge-status st-산출완료">산출완료</span></td><td>2026-03-28</td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0246','A')"><td>HD-2026-0246</td><td>힐스테이트 위례</td><td>균열</td><td>관리사무소</td><td><span class="badge badge-a">TYPE A</span></td><td>91%</td><td><span class="badge-status st-조사중">조사중</span></td><td>2026-03-27</td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0245','B')"><td>HD-2026-0245</td><td>자이 하늘채</td><td>결로</td><td>입주민</td><td><span class="badge badge-b">TYPE B</span></td><td>88%</td><td><span class="badge-status st-면책검토">면책검토</span></td><td>2026-03-27</td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0244','C')"><td>HD-2026-0244</td><td>푸르지오 시티</td><td>도배 손상</td><td>입주민</td><td><span class="badge badge-c">TYPE C</span></td><td>96%</td><td><span class="badge-status st-승인대기">승인대기</span></td><td>2026-03-26</td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0243','A')"><td>HD-2026-0243</td><td>e편한세상 금빛</td><td>침하</td><td>관리사무소</td><td><span class="badge badge-a">TYPE A</span></td><td>87%</td><td><span class="badge-status st-접수">접수</span></td><td>2026-03-26</td></tr>
       </tbody>
     </table>
   </div>
@@ -288,120 +355,53 @@ tr.clickable{cursor:pointer;}
 <!-- ==================== TYPE A ==================== -->
 <div class="page" id="page-typeA">
   <div class="page-title">TYPE A - 시공사 하자</div>
-  <div class="page-desc">시공사 발생 하자 -- 하자보증기간 내 하자보수 청구 대상</div>
+  <div class="page-desc">시공사 발생 하자 — 하자보증기간 내 하자보수 청구 대상</div>
 
-  <div class="card-grid card-grid-2" id="typeACards">
-    <!-- 단지1 -->
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:16px;font-weight:700;">힐스테이트 위례</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">하자보증 만료: 2027-06-15</div>
-        </div>
-        <span class="badge-status st-조사중">조사중</span>
-      </div>
-      <div style="font-size:13px;margin-bottom:12px;">
-        <div style="margin-bottom:4px;"><span style="color:#888;">하자 목록:</span> 외벽 균열 3건, 지하주차장 누수 2건, 바닥 침하 1건</div>
-        <div><span style="color:#888;">감정 금액:</span> <b>1,240,000,000원</b></div>
-      </div>
-      <div class="tracker">
-        <div class="tracker-step done"><div class="tracker-dot">1</div><span>하자조사</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step current"><div class="tracker-dot">2</div><span>감정평가</span></div>
-        <div class="tracker-line"></div>
-        <div class="tracker-step"><div class="tracker-dot">3</div><span>시공사 통보</span></div>
-        <div class="tracker-line"></div>
-        <div class="tracker-step"><div class="tracker-dot">4</div><span>협상/청구</span></div>
-        <div class="tracker-line"></div>
-        <div class="tracker-step"><div class="tracker-dot">5</div><span>완료</span></div>
-      </div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#FF6B35;" data-counter="38">0</div>
+      <div class="kpi-mini-label">전체 건수</div>
     </div>
-
-    <!-- 단지2 -->
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:16px;font-weight:700;">e편한세상 금빛</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">하자보증 만료: 2026-12-31</div>
-        </div>
-        <span class="badge-status st-협상중">협상중</span>
-      </div>
-      <div style="font-size:13px;margin-bottom:12px;">
-        <div style="margin-bottom:4px;"><span style="color:#888;">하자 목록:</span> 옥상 방수 불량 2건, 창호 하자 5건</div>
-        <div><span style="color:#888;">감정 금액:</span> <b>890,000,000원</b></div>
-      </div>
-      <div class="tracker">
-        <div class="tracker-step done"><div class="tracker-dot">1</div><span>하자조사</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">2</div><span>감정평가</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">3</div><span>시공사 통보</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step current"><div class="tracker-dot">4</div><span>협상/청구</span></div>
-        <div class="tracker-line"></div>
-        <div class="tracker-step"><div class="tracker-dot">5</div><span>완료</span></div>
-      </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#2563EB;" data-counter="12">0</div>
+      <div class="kpi-mini-label">조사/감정 중</div>
     </div>
-
-    <!-- 단지3 소송 -->
-    <div class="card" style="border-left:3px solid #DC2626;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:16px;font-weight:700;">래미안 리더스원</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">하자보증 만료: 2026-03-01 (경과)</div>
-        </div>
-        <span class="badge-status st-소송진행">소송진행</span>
-      </div>
-      <div style="font-size:13px;margin-bottom:12px;">
-        <div style="margin-bottom:4px;"><span style="color:#888;">하자 목록:</span> 구조체 균열 12건, 배관 누수 8건, 단열 불량 4건</div>
-        <div><span style="color:#888;">감정 금액:</span> <b>3,560,000,000원</b></div>
-        <div style="margin-top:6px;color:#DC2626;font-size:12px;font-weight:600;">소송 진행 중 - 서울중앙지법 2026가합12345</div>
-      </div>
-      <div class="tracker">
-        <div class="tracker-step done"><div class="tracker-dot">1</div><span>하자조사</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">2</div><span>감정평가</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">3</div><span>시공사 통보</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">4</div><span>협상/청구</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step current"><div class="tracker-dot">5</div><span>소송</span></div>
-      </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#DC2626;" data-counter="8">0</div>
+      <div class="kpi-mini-label">협상/소송 중</div>
     </div>
-
-    <!-- 단지4 -->
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:16px;font-weight:700;">디에이치 아너힐즈</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">하자보증 만료: 2028-09-20</div>
-        </div>
-        <span class="badge-status st-청구완료">청구완료</span>
-      </div>
-      <div style="font-size:13px;margin-bottom:12px;">
-        <div style="margin-bottom:4px;"><span style="color:#888;">하자 목록:</span> 도장 박리 6건, 타일 파손 3건</div>
-        <div><span style="color:#888;">감정 금액:</span> <b>320,000,000원</b></div>
-      </div>
-      <div class="tracker">
-        <div class="tracker-step done"><div class="tracker-dot">1</div><span>하자조사</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">2</div><span>감정평가</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">3</div><span>시공사 통보</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">4</div><span>협상/청구</span></div>
-        <div class="tracker-line done"></div>
-        <div class="tracker-step done"><div class="tracker-dot">5</div><span>완료</span></div>
-      </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#059669;" data-counter="18">0</div>
+      <div class="kpi-mini-label">청구/완료</div>
     </div>
   </div>
+
+  <div id="typeAList"></div>
 </div>
 
 <!-- ==================== TYPE B ==================== -->
 <div class="page" id="page-typeB">
   <div class="page-title">TYPE B - 면책 관리</div>
   <div class="page-desc">면책 사유 분류 및 이의신청 관리</div>
+
+  <div class="kpi-mini">
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#DC2626;" data-counter="3">0</div>
+      <div class="kpi-mini-label">의견서 미발송</div>
+    </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#FF6B35;" data-counter="2">0</div>
+      <div class="kpi-mini-label">이의신청 대기</div>
+    </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#2563EB;" data-counter="1">0</div>
+      <div class="kpi-mini-label">재검토 중</div>
+    </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#059669;" data-counter="1">0</div>
+      <div class="kpi-mini-label">종결</div>
+    </div>
+  </div>
 
   <div class="tabs" id="typeBTabs">
     <div class="tab active" onclick="switchTypeBTab('all')">전체</div>
@@ -411,104 +411,7 @@ tr.clickable{cursor:pointer;}
     <div class="tab" onclick="switchTypeBTab('약관')">약관 미해당</div>
   </div>
 
-  <div id="typeBList">
-    <!-- 건1 -->
-    <div class="card typeB-card" data-reason="과실">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:15px;font-weight:700;">자이 하늘채 - 결로 피해</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">HD-2026-0245 | 면책 사유: <b>점유자 과실</b> (환기 미실시)</div>
-        </div>
-        <span class="badge badge-b">TYPE B</span>
-      </div>
-      <div style="font-size:13px;color:#666;margin-bottom:12px;">약관 조항: 제12조 3항 (사용자 관리 부주의) | 의견서 발송: <span style="color:#16A34A;font-weight:600;">완료</span></div>
-      <div class="flow">
-        <div class="flow-step active">AI판정</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">면책통보</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">이의신청</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">재검토</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">최종종결</div>
-      </div>
-    </div>
-
-    <!-- 건2 -->
-    <div class="card typeB-card" data-reason="자연재해">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:15px;font-weight:700;">롯데캐슬 골드파크 - 지반 침하</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">HD-2026-0231 | 면책 사유: <b>자연재해</b> (집중호우)</div>
-        </div>
-        <span class="badge badge-b">TYPE B</span>
-      </div>
-      <div style="font-size:13px;color:#666;margin-bottom:12px;">약관 조항: 제8조 1항 (천재지변 면책) | 의견서 발송: <span style="color:#16A34A;font-weight:600;">완료</span></div>
-      <div style="margin-bottom:12px;"><span class="countdown">이의신청 기한: D-3</span></div>
-      <div class="flow">
-        <div class="flow-step active">AI판정</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">면책통보</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">이의신청 수신</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">재검토</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">최종종결</div>
-      </div>
-    </div>
-
-    <!-- 건3 -->
-    <div class="card typeB-card" data-reason="경과">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:15px;font-weight:700;">아이파크 삼성 - 외벽 크랙</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">HD-2026-0218 | 면책 사유: <b>보증기간 경과</b></div>
-        </div>
-        <span class="badge badge-b">TYPE B</span>
-      </div>
-      <div style="font-size:13px;color:#666;margin-bottom:12px;">약관 조항: 제5조 2항 (보증기간 종료) | 의견서 발송: <span style="color:#D97706;font-weight:600;">대기</span></div>
-      <div class="flow">
-        <div class="flow-step active">AI판정</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">면책통보</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">이의신청</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">재검토</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">최종종결</div>
-      </div>
-    </div>
-
-    <!-- 건4 -->
-    <div class="card typeB-card" data-reason="약관">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:15px;font-weight:700;">포레나 천안 - 곰팡이 발생</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">HD-2026-0210 | 면책 사유: <b>약관 미해당</b> (미관 하자)</div>
-        </div>
-        <span class="badge badge-b">TYPE B</span>
-      </div>
-      <div style="font-size:13px;color:#666;margin-bottom:12px;">약관 조항: 별표2 미해당 항목 | 의견서 발송: <span style="color:#16A34A;font-weight:600;">완료</span></div>
-      <div style="margin-bottom:12px;"><span class="countdown">이의신청 기한: D-5</span></div>
-      <div class="flow">
-        <div class="flow-step active">AI판정</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">면책통보</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">이의신청 수신</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">재검토</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step">최종종결</div>
-      </div>
-    </div>
-
-    <!-- 건5 완료 -->
-    <div class="card typeB-card" data-reason="과실">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-        <div>
-          <div style="font-size:15px;font-weight:700;">더샵 센트리지 - 배관 동파</div>
-          <div style="font-size:12px;color:#888;margin-top:4px;">HD-2026-0198 | 면책 사유: <b>점유자 과실</b> (동절기 미조치)</div>
-        </div>
-        <span class="badge badge-b">TYPE B</span>
-      </div>
-      <div style="font-size:13px;color:#666;margin-bottom:12px;">약관 조항: 제12조 5항 | 의견서 발송: <span style="color:#16A34A;font-weight:600;">완료</span></div>
-      <div class="flow">
-        <div class="flow-step active">AI판정</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">면책통보</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">이의신청 수신</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">재검토</div><div class="flow-arrow">&#8594;</div>
-        <div class="flow-step active">최종종결</div>
-      </div>
-    </div>
-  </div>
+  <div id="typeBList"></div>
 
   <div class="card" style="margin-top:24px;">
     <div style="font-size:15px;font-weight:600;margin-bottom:16px;">금감원 민원 대응 자료</div>
@@ -525,97 +428,63 @@ tr.clickable{cursor:pointer;}
   <div class="page-title">TYPE C - 보험금 산출</div>
   <div class="page-desc">AI 적산 결과 및 보험금 산출 상세</div>
 
-  <div class="card-grid card-grid-3">
-    <div class="card" style="text-align:center;">
-      <div class="kpi-label">AI 산출 총액</div>
-      <div class="kpi-num" style="color:#FF6B35;">8,450,000</div>
-      <div class="kpi-sub">원</div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#FF6B35;" data-counter="24">0</div>
+      <div class="kpi-mini-label">접수</div>
     </div>
-    <div class="card" style="text-align:center;">
-      <div class="kpi-label">소유자 부담분</div>
-      <div class="kpi-num">5,280,000</div>
-      <div class="kpi-sub">원 (62.5%)</div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#2563EB;" data-counter="48">0</div>
+      <div class="kpi-mini-label">적산중</div>
     </div>
-    <div class="card" style="text-align:center;">
-      <div class="kpi-label">임차인 부담분</div>
-      <div class="kpi-num">3,170,000</div>
-      <div class="kpi-sub">원 (37.5%)</div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#DC2626;" data-counter="36">0</div>
+      <div class="kpi-mini-label">승인대기</div>
     </div>
-  </div>
-
-  <div class="card">
-    <div style="font-size:15px;font-weight:600;margin-bottom:16px;">공종별 산출 내역</div>
-    <table>
-      <thead>
-        <tr><th>공종</th><th>수량</th><th>단위</th><th>단가 (원)</th><th>금액 (원)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>도배</td><td>42</td><td>m2</td><td>18,500</td><td>777,000</td></tr>
-        <tr><td>도장</td><td>35</td><td>m2</td><td>12,800</td><td>448,000</td></tr>
-        <tr><td>방수</td><td>28</td><td>m2</td><td>45,200</td><td>1,265,600</td></tr>
-        <tr><td>타일</td><td>18</td><td>m2</td><td>65,000</td><td>1,170,000</td></tr>
-        <tr><td>배관</td><td>12</td><td>m</td><td>128,000</td><td>1,536,000</td></tr>
-        <tr><td>목공</td><td>8</td><td>m2</td><td>85,000</td><td>680,000</td></tr>
-        <tr><td>전기</td><td>6</td><td>개소</td><td>95,000</td><td>570,000</td></tr>
-        <tr><td>잡공사</td><td>1</td><td>식</td><td>2,003,400</td><td>2,003,400</td></tr>
-      </tbody>
-      <tfoot>
-        <tr style="font-weight:700;background:#f9fafb;"><td colspan="4">합계</td><td>8,450,000</td></tr>
-      </tfoot>
-    </table>
-  </div>
-
-  <div class="card">
-    <div style="font-size:15px;font-weight:600;margin-bottom:12px;">법적 근거</div>
-    <div style="font-size:13px;color:#666;line-height:1.8;">
-      2026년 상반기 건설공사 표준품셈 기준, 국토교통부 고시 제2026-105호 적용<br>
-      노임 단가: 2026년 상반기 시중노임단가 (대한건설협회 공표) 기준<br>
-      자재 단가: 물가자료 2026년 3월호 기준
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#059669;" data-counter="40">0</div>
+      <div class="kpi-mini-label">지급완료</div>
     </div>
   </div>
 
-  <div class="card">
-    <div style="font-size:15px;font-weight:600;margin-bottom:12px;">보험 적용 우선순서</div>
-    <div class="priority-flow">
-      <div class="priority-box p1">CGL<div style="font-size:11px;font-weight:400;margin-top:4px;">영업배상책임</div></div>
-      <div class="priority-arrow">&#8594;</div>
-      <div class="priority-box p2">재물보험<div style="font-size:11px;font-weight:400;margin-top:4px;">건물/시설</div></div>
-      <div class="priority-arrow">&#8594;</div>
-      <div class="priority-box p3">개인보험<div style="font-size:11px;font-weight:400;margin-top:4px;">화재/가재</div></div>
+  <div class="tabs" id="typeCTabs">
+    <div class="tab active" onclick="switchTypeCTab('all')">전체 <span style="color:#888;font-size:11px;">(148)</span></div>
+    <div class="tab" onclick="switchTypeCTab('접수')">접수 <span style="color:#FF6B35;font-size:11px;">(24)</span></div>
+    <div class="tab" onclick="switchTypeCTab('적산중')">적산중 <span style="color:#2563EB;font-size:11px;">(48)</span></div>
+    <div class="tab" onclick="switchTypeCTab('승인대기')">승인대기 <span style="color:#DC2626;font-size:11px;">(36)</span></div>
+    <div class="tab" onclick="switchTypeCTab('지급완료')">지급완료 <span style="color:#059669;font-size:11px;">(40)</span></div>
+  </div>
+
+  <div id="typeCList"></div>
+</div>
+
+<!-- ==================== COMPLEX MANAGEMENT ==================== -->
+<div class="page" id="page-complex">
+  <div class="page-title">단지 관리</div>
+  <div class="page-desc">아파트 단지별 보험 가입 현황 및 접수 관리</div>
+
+  <div class="kpi-mini">
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#FF6B35;" data-counter="5">0</div>
+      <div class="kpi-mini-label">관리 단지</div>
+    </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#2563EB;" data-counter="23774">0</div>
+      <div class="kpi-mini-label">총 세대수</div>
+    </div>
+    <div class="kpi-mini-card">
+      <div class="kpi-mini-num" style="color:#059669;" data-counter="247">0</div>
+      <div class="kpi-mini-label">총 접수 건수</div>
     </div>
   </div>
 
-  <div class="card">
-    <div style="font-size:15px;font-weight:600;margin-bottom:12px;">자기부담금 처리</div>
-    <div class="card-grid card-grid-2" style="margin-top:12px;">
-      <div style="padding:16px;background:#f9fafb;border-radius:10px;">
-        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">수리연계 상계</div>
-        <div style="font-size:12px;color:#666;line-height:1.7;">
-          자기부담금 200,000원<br>
-          수리비에서 자동 차감<br>
-          보험금 지급액: 8,250,000원
-        </div>
-      </div>
-      <div style="padding:16px;background:#f9fafb;border-radius:10px;">
-        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">현금지급 시</div>
-        <div style="font-size:12px;color:#666;line-height:1.7;">
-          자기부담금 200,000원 별도 납부<br>
-          보험금 전액 지급: 8,450,000원<br>
-          재원: 수선충당금 또는 관리비 특별회계
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div style="text-align:right;margin-top:16px;">
-    <button class="btn btn-primary" onclick="alert('손해사정사 승인 요청이 전송되었습니다.\n\n대상: 래미안 센트럴파크 HD-2026-0247\n산출액: 8,450,000원\n담당: 김진수 손해사정사\n\n승인 완료 시 보험금 지급 프로세스가 자동 진행됩니다.')">손해사정사 승인 요청</button>
-  </div>
+  <div id="complexList"></div>
 </div>
 
 <!-- ==================== ESTIMATION ==================== -->
 <div class="page" id="page-estimation">
   <div class="page-title">적산 검토</div>
-  <div class="page-desc">수량 내역서 상세 -- AI 기반 자동 산출 결과</div>
+  <div class="page-desc">수량 내역서 상세 — AI 기반 자동 산출 결과</div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -670,7 +539,7 @@ tr.clickable{cursor:pointer;}
   <div class="tabs" id="inspTabs">
     <div class="tab active" onclick="switchInspTab('대기')">대기 <span style="color:#FF6B35;font-size:12px;">(5)</span></div>
     <div class="tab" onclick="switchInspTab('진행')">진행 <span style="color:#FF6B35;font-size:12px;">(3)</span></div>
-    <div class="tab" onclick="switchInspTab('완료')">완료 <span style="color:#16A34A;font-size:12px;">(12)</span></div>
+    <div class="tab" onclick="switchInspTab('완료')">완료 <span style="color:#059669;font-size:12px;">(12)</span></div>
   </div>
 
   <div id="inspList"></div>
@@ -756,8 +625,8 @@ tr.clickable{cursor:pointer;}
         <tr><th>사건번호</th><th>단지명</th><th>적용 보험</th><th>산출액</th><th>자기부담금</th><th>처리 방식</th><th>지급액</th><th>상태</th></tr>
       </thead>
       <tbody>
-        <tr><td>HD-2026-0247</td><td>래미안 센트럴파크</td><td>재물보험</td><td>8,450,000</td><td>100,000</td><td>수리연계 상계</td><td>8,350,000</td><td><span class="badge-status st-승인대기">승인대기</span></td></tr>
-        <tr><td>HD-2026-0244</td><td>푸르지오 시티</td><td>재물보험</td><td>4,200,000</td><td>100,000</td><td>수리연계 상계</td><td>4,100,000</td><td><span class="badge-status st-승인대기">승인대기</span></td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0247','C')"><td>HD-2026-0247</td><td>래미안 센트럴파크</td><td>재물보험</td><td>8,450,000</td><td>100,000</td><td>수리연계 상계</td><td>8,350,000</td><td><span class="badge-status st-승인대기">승인대기</span></td></tr>
+        <tr class="clickable" onclick="goToCase('HD-2026-0244','C')"><td>HD-2026-0244</td><td>푸르지오 시티</td><td>재물보험</td><td>4,200,000</td><td>100,000</td><td>수리연계 상계</td><td>4,100,000</td><td><span class="badge-status st-승인대기">승인대기</span></td></tr>
         <tr><td>HD-2026-0240</td><td>자이 프레지던스</td><td>개인보험</td><td>2,800,000</td><td>200,000</td><td>현금 납부</td><td>2,800,000</td><td><span class="badge-status st-완료">완료</span></td></tr>
         <tr><td>HD-2026-0235</td><td>래미안 퍼스트하이</td><td>CGL</td><td>15,600,000</td><td>500,000</td><td>수리연계 상계</td><td>15,100,000</td><td><span class="badge-status st-산출완료">산출완료</span></td></tr>
         <tr><td>HD-2026-0228</td><td>힐스테이트 광교</td><td>재물보험</td><td>6,100,000</td><td>100,000</td><td>수리연계 상계</td><td>6,000,000</td><td><span class="badge-status st-완료">완료</span></td></tr>
@@ -831,19 +700,19 @@ tr.clickable{cursor:pointer;}
   </div>
 
   <div class="card-grid card-grid-3" style="margin-top:20px;">
-    <div class="card" style="text-align:center;">
+    <div class="card card-hover" style="text-align:center;">
       <div class="kpi-label">총 구상 대상 금액</div>
-      <div class="kpi-num" style="font-size:28px;">32,950,000</div>
+      <div class="kpi-num" style="font-size:28px;" data-counter="32950000" data-format="currency">0</div>
       <div class="kpi-sub">원</div>
     </div>
-    <div class="card" style="text-align:center;">
+    <div class="card card-hover" style="text-align:center;">
       <div class="kpi-label">회수 완료</div>
-      <div class="kpi-num" style="font-size:28px;color:#16A34A;">6,100,000</div>
+      <div class="kpi-num" style="font-size:28px;color:#059669;" data-counter="6100000" data-format="currency">0</div>
       <div class="kpi-sub">원 (18.5%)</div>
     </div>
-    <div class="card" style="text-align:center;">
+    <div class="card card-hover" style="text-align:center;">
       <div class="kpi-label">진행중</div>
-      <div class="kpi-num" style="font-size:28px;color:#FF6B35;">26,850,000</div>
+      <div class="kpi-num" style="font-size:28px;color:#FF6B35;" data-counter="26850000" data-format="currency">0</div>
       <div class="kpi-sub">원 (81.5%)</div>
     </div>
   </div>
@@ -854,16 +723,244 @@ tr.clickable{cursor:pointer;}
 <script>
 // ====== DATA ======
 var allCases = [
-  {id:'HD-2026-0247',name:'래미안 센트럴파크',dong:'101동 1502호',type:'C',source:'입주민',status:'산출완료',conf:94,date:'2026-03-28',defect:'누수',desc:'욕실 천장 및 거실 벽면 누수. 상층 배관 노후화 추정.',amount:'8,450,000',photos:['욕실 천장 누수','거실 벽면 얼룩','배관 접합부']},
-  {id:'HD-2026-0246',name:'힐스테이트 위례',dong:'203동 801호',type:'A',source:'관리사무소',status:'조사중',conf:91,date:'2026-03-27',defect:'균열',desc:'지하주차장 벽체 균열 다수 발견. 구조 안전 점검 필요.',amount:'미산출',photos:['벽체 균열 1','벽체 균열 2','바닥 침하']},
-  {id:'HD-2026-0245',name:'자이 하늘채',dong:'305동 1203호',type:'B',source:'입주민',status:'면책검토',conf:88,date:'2026-03-27',defect:'결로',desc:'북측 침실 창문 주변 결로 및 곰팡이. 환기 미실시로 면책 검토.',amount:'면책',photos:['창문 결로','곰팡이 발생','벽지 손상']},
-  {id:'HD-2026-0244',name:'푸르지오 시티',dong:'102동 502호',type:'C',source:'입주민',status:'승인대기',conf:96,date:'2026-03-26',defect:'도배 손상',desc:'누수로 인한 도배 전면 손상. AI 적산 완료 후 승인 대기.',amount:'4,200,000',photos:['도배 손상 1','도배 손상 2','천장 얼룩']},
-  {id:'HD-2026-0243',name:'e편한세상 금빛',dong:'501동 301호',type:'A',source:'관리사무소',status:'접수',conf:87,date:'2026-03-26',defect:'침하',desc:'1층 로비 바닥 침하 현상. 지반 조사 필요.',amount:'미산출',photos:['바닥 침하','균열 발생','지반 상태']},
-  {id:'HD-2026-0242',name:'자이 프레지던스',dong:'201동 1801호',type:'C',source:'입주민',status:'완료',conf:95,date:'2026-03-25',defect:'배관 파열',desc:'겨울철 배관 파열로 인한 수해. 보험금 지급 완료.',amount:'2,800,000',photos:['파열 배관','수해 현장','복구 완료']},
-  {id:'HD-2026-0241',name:'래미안 퍼스트하이',dong:'103동 602호',type:'C',source:'입주민',status:'산출완료',conf:92,date:'2026-03-25',defect:'방수 불량',desc:'옥상 방수층 노후로 최상층 누수 발생.',amount:'15,600,000',photos:['옥상 방수','천장 누수','벽면 침투']},
-  {id:'HD-2026-0240',name:'힐스테이트 광교',dong:'302동 1101호',type:'C',source:'관리사무소',status:'완료',conf:93,date:'2026-03-24',defect:'외벽 누수',desc:'외벽 실란트 노후로 인한 빗물 침투.',amount:'6,100,000',photos:['외벽 실란트','내부 침투','보수 전']},
-  {id:'HD-2026-0239',name:'롯데캐슬 골드파크',dong:'402동 901호',type:'B',source:'입주민',status:'면책검토',conf:85,date:'2026-03-24',defect:'지반 침하',desc:'집중호우 후 지반 침하. 자연재해 면책 검토.',amount:'면책',photos:['지반 침하','균열 발생','배수로 상태']},
-  {id:'HD-2026-0238',name:'아이파크 삼성',dong:'101동 2301호',type:'B',source:'관리사무소',status:'면책검토',conf:82,date:'2026-03-23',defect:'외벽 크랙',desc:'보증기간 경과 건. 면책 통보 예정.',amount:'면책',photos:['외벽 크랙 1','외벽 크랙 2','내부 영향']}
+  {id:'HD-2026-0247',name:'래미안 센트럴파크',dong:'101동 1502호',type:'C',source:'입주민',status:'산출완료',conf:94,date:'2026-03-28',defect:'누수',desc:'욕실 천장 및 거실 벽면 누수. 상층 배관 노후화 추정.',amount:'8,450,000',photos:['욕실 천장 누수','거실 벽면 얼룩','배관 접합부'],complex:'헬리오시티',insurance:'재물보험',ownerAmt:'5,280,000',tenantAmt:'3,170,000'},
+  {id:'HD-2026-0246',name:'힐스테이트 위례',dong:'203동 801호',type:'A',source:'관리사무소',status:'조사중',conf:91,date:'2026-03-27',defect:'균열',desc:'지하주차장 벽체 균열 다수 발견. 구조 안전 점검 필요.',amount:'미산출',photos:['벽체 균열 1','벽체 균열 2','바닥 침하'],complex:'헬리오시티'},
+  {id:'HD-2026-0245',name:'자이 하늘채',dong:'305동 1203호',type:'B',source:'입주민',status:'면책검토',conf:88,date:'2026-03-27',defect:'결로',desc:'북측 침실 창문 주변 결로 및 곰팡이. 환기 미실시로 면책 검토.',amount:'면책',photos:['창문 결로','곰팡이 발생','벽지 손상'],complex:'마포래미안'},
+  {id:'HD-2026-0244',name:'푸르지오 시티',dong:'102동 502호',type:'C',source:'입주민',status:'승인대기',conf:96,date:'2026-03-26',defect:'도배 손상',desc:'누수로 인한 도배 전면 손상. AI 적산 완료 후 승인 대기.',amount:'4,200,000',photos:['도배 손상 1','도배 손상 2','천장 얼룩'],complex:'잠실파크리오',insurance:'재물보험',ownerAmt:'2,625,000',tenantAmt:'1,575,000'},
+  {id:'HD-2026-0243',name:'e편한세상 금빛',dong:'501동 301호',type:'A',source:'관리사무소',status:'접수',conf:87,date:'2026-03-26',defect:'침하',desc:'1층 로비 바닥 침하 현상. 지반 조사 필요.',amount:'미산출',photos:['바닥 침하','균열 발생','지반 상태'],complex:'은평뉴타운'},
+  {id:'HD-2026-0242',name:'자이 프레지던스',dong:'201동 1801호',type:'C',source:'입주민',status:'완료',conf:95,date:'2026-03-25',defect:'배관 파열',desc:'겨울철 배관 파열로 인한 수해. 보험금 지급 완료.',amount:'2,800,000',photos:['파열 배관','수해 현장','복구 완료'],complex:'송도더샵',insurance:'개인보험',ownerAmt:'1,680,000',tenantAmt:'1,120,000'},
+  {id:'HD-2026-0241',name:'래미안 퍼스트하이',dong:'103동 602호',type:'C',source:'입주민',status:'산출완료',conf:92,date:'2026-03-25',defect:'방수 불량',desc:'옥상 방수층 노후로 최상층 누수 발생.',amount:'15,600,000',photos:['옥상 방수','천장 누수','벽면 침투'],complex:'헬리오시티',insurance:'CGL',ownerAmt:'9,750,000',tenantAmt:'5,850,000'},
+  {id:'HD-2026-0240',name:'힐스테이트 광교',dong:'302동 1101호',type:'C',source:'관리사무소',status:'완료',conf:93,date:'2026-03-24',defect:'외벽 누수',desc:'외벽 실란트 노후로 인한 빗물 침투.',amount:'6,100,000',photos:['외벽 실란트','내부 침투','보수 전'],complex:'마포래미안',insurance:'재물보험',ownerAmt:'3,813,000',tenantAmt:'2,287,000'},
+  {id:'HD-2026-0239',name:'롯데캐슬 골드파크',dong:'402동 901호',type:'B',source:'입주민',status:'면책검토',conf:85,date:'2026-03-24',defect:'지반 침하',desc:'집중호우 후 지반 침하. 자연재해 면책 검토.',amount:'면책',photos:['지반 침하','균열 발생','배수로 상태'],complex:'잠실파크리오'},
+  {id:'HD-2026-0238',name:'아이파크 삼성',dong:'101동 2301호',type:'B',source:'관리사무소',status:'면책검토',conf:82,date:'2026-03-23',defect:'외벽 크랙',desc:'보증기간 경과 건. 면책 통보 예정.',amount:'면책',photos:['외벽 크랙 1','외벽 크랙 2','내부 영향'],complex:'헬리오시티'}
+];
+
+// TYPE A detailed data
+var typeAData = [
+  {
+    id:'HD-2026-0246',name:'힐스테이트 위례',status:'조사중',warrantyEnd:'2027-06-15',
+    builder:'(주)현대건설',builderContact:'02-1234-5678',
+    step:2,
+    defects:[
+      {type:'외벽 균열',location:'203동 외벽 8~12층',found:'2026-03-15',amount:'520,000,000',status:'감정중'},
+      {type:'외벽 균열',location:'205동 외벽 3~5층',found:'2026-03-18',amount:'180,000,000',status:'감정중'},
+      {type:'외벽 균열',location:'201동 외벽 15층',found:'2026-03-20',amount:'95,000,000',status:'접수'},
+      {type:'주차장 누수',location:'B2 주차장 천장',found:'2026-03-10',amount:'320,000,000',status:'감정완료'},
+      {type:'주차장 누수',location:'B1 주차장 벽면',found:'2026-03-12',amount:'125,000,000',status:'감정중'},
+      {type:'바닥 침하',location:'203동 1층 로비',found:'2026-03-22',amount:'미산출',status:'접수'}
+    ],
+    totalAmount:'1,240,000,000'
+  },
+  {
+    id:'HD-2026-0243',name:'e편한세상 금빛',status:'협상중',warrantyEnd:'2026-12-31',
+    builder:'대림산업(주)',builderContact:'02-9876-5432',
+    step:4,
+    defects:[
+      {type:'옥상 방수 불량',location:'501동 옥상',found:'2026-02-10',amount:'450,000,000',status:'감정완료'},
+      {type:'옥상 방수 불량',location:'503동 옥상',found:'2026-02-15',amount:'380,000,000',status:'감정완료'},
+      {type:'창호 하자',location:'전동 502~510세대',found:'2026-01-20',amount:'12,000,000',status:'청구완료'},
+      {type:'창호 하자',location:'전동 301~308세대',found:'2026-01-25',amount:'9,600,000',status:'청구완료'},
+      {type:'창호 하자',location:'전동 401~406세대',found:'2026-02-05',amount:'7,200,000',status:'협상중'},
+      {type:'창호 하자',location:'전동 601~612세대',found:'2026-02-08',amount:'14,400,000',status:'접수'},
+      {type:'창호 하자',location:'전동 701~704세대',found:'2026-02-12',amount:'4,800,000',status:'접수'}
+    ],
+    totalAmount:'890,000,000'
+  },
+  {
+    id:'HD-2026-0260',name:'래미안 리더스원',status:'소송진행',warrantyEnd:'2026-03-01',
+    builder:'삼성물산(주)',builderContact:'02-2222-3333',
+    step:5,
+    defects:[
+      {type:'구조체 균열',location:'전동 지하1~2층',found:'2025-06-01',amount:'1,200,000,000',status:'소송중'},
+      {type:'구조체 균열',location:'101동 기둥',found:'2025-06-15',amount:'450,000,000',status:'소송중'},
+      {type:'구조체 균열',location:'103동 보',found:'2025-07-01',amount:'380,000,000',status:'소송중'},
+      {type:'배관 누수',location:'전동 급수관',found:'2025-08-01',amount:'680,000,000',status:'소송중'},
+      {type:'배관 누수',location:'전동 배수관',found:'2025-08-10',amount:'320,000,000',status:'소송중'},
+      {type:'단열 불량',location:'101~105동 외벽',found:'2025-09-01',amount:'530,000,000',status:'소송중'}
+    ],
+    totalAmount:'3,560,000,000',
+    lawsuit:'서울중앙지법 2026가합12345'
+  },
+  {
+    id:'HD-2026-0270',name:'디에이치 아너힐즈',status:'청구완료',warrantyEnd:'2028-09-20',
+    builder:'현대엔지니어링(주)',builderContact:'02-4444-5555',
+    step:5,
+    defects:[
+      {type:'도장 박리',location:'전동 외부 도장',found:'2026-01-10',amount:'120,000,000',status:'청구완료'},
+      {type:'도장 박리',location:'지하주차장 도장',found:'2026-01-15',amount:'85,000,000',status:'청구완료'},
+      {type:'도장 박리',location:'공용부 계단실',found:'2026-01-20',amount:'45,000,000',status:'청구완료'},
+      {type:'타일 파손',location:'1층 로비',found:'2026-02-01',amount:'35,000,000',status:'청구완료'},
+      {type:'타일 파손',location:'지하 통로',found:'2026-02-05',amount:'20,000,000',status:'청구완료'},
+      {type:'타일 파손',location:'옥상 테라스',found:'2026-02-10',amount:'15,000,000',status:'청구완료'}
+    ],
+    totalAmount:'320,000,000'
+  }
+];
+
+// TYPE B detailed data
+var typeBData = [
+  {
+    id:'HD-2026-0245',name:'자이 하늘채',defect:'결로 피해',reason:'과실',
+    article:'제12조 3항',articleDetail:'사용자 관리 부주의 — 환기 미실시에 따른 결로 발생은 점유자 과실로 판단',
+    opinionDate:'2026-03-20',opinionStatus:'발송완료',
+    objection:null,objectionDeadline:null,
+    review:null,flowStep:2
+  },
+  {
+    id:'HD-2026-0231',name:'롯데캐슬 골드파크',defect:'지반 침하',reason:'자연재해',
+    article:'제8조 1항',articleDetail:'천재지변 면책 — 2026년 3월 집중호우(시간당 80mm)로 인한 지반 침하는 자연재해에 해당',
+    opinionDate:'2026-03-18',opinionStatus:'발송완료',
+    objection:'자연재해가 아닌 배수시설 부실로 인한 침하 주장',objectionDeadline:'D-3',
+    review:null,flowStep:3
+  },
+  {
+    id:'HD-2026-0218',name:'아이파크 삼성',defect:'외벽 크랙',reason:'경과',
+    article:'제5조 2항',articleDetail:'보증기간 종료 — 하자보증기간(사용승인일로부터 10년) 2025-12-31 만료',
+    opinionDate:null,opinionStatus:'미발송',
+    objection:null,objectionDeadline:null,
+    review:null,flowStep:1
+  },
+  {
+    id:'HD-2026-0210',name:'포레나 천안',defect:'곰팡이 발생',reason:'약관',
+    article:'별표2 미해당 항목',articleDetail:'약관 별표2 하자 유형 목록에 곰팡이(미관 하자)는 포함되지 않음',
+    opinionDate:'2026-03-10',opinionStatus:'발송완료',
+    objection:'곰팡이는 환기구 설계 불량에 의한 구조적 하자 주장',objectionDeadline:'D-5',
+    review:'재검토 진행 중 — 환기구 설계도면 대조 필요',flowStep:4
+  },
+  {
+    id:'HD-2026-0198',name:'더샵 센트리지',defect:'배관 동파',reason:'과실',
+    article:'제12조 5항',articleDetail:'동절기 동파방지 조치 미이행 — 입주민 관리 의무 위반',
+    opinionDate:'2026-02-28',opinionStatus:'발송완료',
+    objection:'관리사무소의 동파방지 안내 미흡 주장',objectionDeadline:null,
+    review:'최종 종결 — 면책 확정 (2026-03-15)',flowStep:5
+  }
+];
+
+// TYPE C detailed data
+var typeCData = [
+  {
+    id:'HD-2026-0247',name:'래미안 센트럴파크',dong:'101동 1502호',defect:'누수',status:'산출완료',
+    totalAmount:'8,450,000',ownerAmt:'5,280,000',tenantAmt:'3,170,000',
+    insurance:'재물보험',insurerName:'삼성화재',
+    estimation:[
+      {work:'도배',qty:42,unit:'m2',price:18500,amount:777000},
+      {work:'도장',qty:35,unit:'m2',price:12800,amount:448000},
+      {work:'방수',qty:28,unit:'m2',price:45200,amount:1265600},
+      {work:'타일',qty:18,unit:'m2',price:65000,amount:1170000},
+      {work:'배관',qty:12,unit:'m',price:128000,amount:1536000},
+      {work:'목공',qty:8,unit:'m2',price:85000,amount:680000},
+      {work:'전기',qty:6,unit:'개소',price:95000,amount:570000},
+      {work:'잡공사',qty:1,unit:'식',price:2003400,amount:2003400}
+    ],
+    approval:'승인대기',payments:[]
+  },
+  {
+    id:'HD-2026-0244',name:'푸르지오 시티',dong:'102동 502호',defect:'도배 손상',status:'승인대기',
+    totalAmount:'4,200,000',ownerAmt:'2,625,000',tenantAmt:'1,575,000',
+    insurance:'재물보험',insurerName:'현대해상',
+    estimation:[
+      {work:'도배',qty:68,unit:'m2',price:18500,amount:1258000},
+      {work:'도장',qty:45,unit:'m2',price:12800,amount:576000},
+      {work:'방수',qty:15,unit:'m2',price:45200,amount:678000},
+      {work:'목공',qty:12,unit:'m',price:85000,amount:1020000},
+      {work:'잡공사',qty:1,unit:'식',price:668000,amount:668000}
+    ],
+    approval:'승인대기',payments:[]
+  },
+  {
+    id:'HD-2026-0242',name:'자이 프레지던스',dong:'201동 1801호',defect:'배관 파열',status:'지급완료',
+    totalAmount:'2,800,000',ownerAmt:'1,680,000',tenantAmt:'1,120,000',
+    insurance:'개인보험',insurerName:'KB손해보험',
+    estimation:[
+      {work:'배관',qty:8,unit:'m',price:128000,amount:1024000},
+      {work:'도배',qty:35,unit:'m2',price:18500,amount:647500},
+      {work:'도장',qty:28,unit:'m2',price:12800,amount:358400},
+      {work:'잡공사',qty:1,unit:'식',price:770100,amount:770100}
+    ],
+    approval:'승인완료',payments:[{date:'2026-03-20',amount:'2,800,000',method:'계좌이체'}]
+  },
+  {
+    id:'HD-2026-0241',name:'래미안 퍼스트하이',dong:'103동 602호',defect:'방수 불량',status:'산출완료',
+    totalAmount:'15,600,000',ownerAmt:'9,750,000',tenantAmt:'5,850,000',
+    insurance:'CGL',insurerName:'DB손해보험',
+    estimation:[
+      {work:'방수',qty:120,unit:'m2',price:59000,amount:7080000},
+      {work:'타일',qty:45,unit:'m2',price:65000,amount:2925000},
+      {work:'도배',qty:85,unit:'m2',price:18500,amount:1572500},
+      {work:'도장',qty:60,unit:'m2',price:12800,amount:768000},
+      {work:'배관',qty:8,unit:'m',price:128000,amount:1024000},
+      {work:'잡공사',qty:1,unit:'식',price:2230500,amount:2230500}
+    ],
+    approval:'승인대기',payments:[]
+  },
+  {
+    id:'HD-2026-0240',name:'힐스테이트 광교',dong:'302동 1101호',defect:'외벽 누수',status:'지급완료',
+    totalAmount:'6,100,000',ownerAmt:'3,813,000',tenantAmt:'2,287,000',
+    insurance:'재물보험',insurerName:'메리츠화재',
+    estimation:[
+      {work:'방수',qty:55,unit:'m2',price:45200,amount:2486000},
+      {work:'도배',qty:50,unit:'m2',price:18500,amount:925000},
+      {work:'도장',qty:40,unit:'m2',price:12800,amount:512000},
+      {work:'타일',qty:22,unit:'m2',price:65000,amount:1430000},
+      {work:'잡공사',qty:1,unit:'식',price:747000,amount:747000}
+    ],
+    approval:'승인완료',payments:[{date:'2026-03-18',amount:'6,100,000',method:'계좌이체'}]
+  }
+];
+
+// Complex (단지) data
+var complexData = [
+  {
+    name:'헬리오시티',units:9510,address:'서울시 송파구 올림픽로 300',
+    office:'02-2145-9500',manager:'김철수',
+    insurances:['CGL','주택화재','재물'],
+    insuranceDetails:[
+      {type:'CGL',insurer:'DB손해보험',policy:'CGL-2026-HLC-001',start:'2026-01-01',end:'2027-12-31',limit:'50억원',deductible:'50만원'},
+      {type:'주택화재',insurer:'삼성화재',policy:'HF-2026-HLC-002',start:'2026-01-01',end:'2026-12-31',limit:'세대당 1억원',deductible:'10만원'},
+      {type:'재물',insurer:'현대해상',policy:'PR-2026-HLC-003',start:'2026-01-01',end:'2026-12-31',limit:'100억원',deductible:'10만원'}
+    ],
+    cases:82,warrantyStatus:[{item:'구조체',end:'2029-06-15',remain:'3년 3개월'},{item:'방수',end:'2028-06-15',remain:'2년 3개월'},{item:'마감',end:'2027-06-15',remain:'1년 3개월'}]
+  },
+  {
+    name:'마포래미안',units:2400,address:'서울시 마포구 월드컵로 100',
+    office:'02-3456-7890',manager:'이영희',
+    insurances:['CGL','주택화재'],
+    insuranceDetails:[
+      {type:'CGL',insurer:'메리츠화재',policy:'CGL-2026-MPR-001',start:'2026-01-01',end:'2027-12-31',limit:'30억원',deductible:'50만원'},
+      {type:'주택화재',insurer:'KB손해보험',policy:'HF-2026-MPR-002',start:'2026-01-01',end:'2026-12-31',limit:'세대당 8천만원',deductible:'10만원'}
+    ],
+    cases:45,warrantyStatus:[{item:'구조체',end:'2030-03-01',remain:'4년'},{item:'방수',end:'2029-03-01',remain:'3년'},{item:'마감',end:'2028-03-01',remain:'2년'}]
+  },
+  {
+    name:'잠실파크리오',units:6864,address:'서울시 송파구 올림픽로 135',
+    office:'02-2147-5000',manager:'박민수',
+    insurances:['CGL','재물'],
+    insuranceDetails:[
+      {type:'CGL',insurer:'삼성화재',policy:'CGL-2026-JPR-001',start:'2026-01-01',end:'2027-12-31',limit:'40억원',deductible:'50만원'},
+      {type:'재물',insurer:'현대해상',policy:'PR-2026-JPR-002',start:'2026-01-01',end:'2026-12-31',limit:'80억원',deductible:'10만원'}
+    ],
+    cases:58,warrantyStatus:[{item:'구조체',end:'2028-12-01',remain:'2년 9개월'},{item:'방수',end:'2027-12-01',remain:'1년 9개월'},{item:'마감',end:'2026-12-01',remain:'9개월'}]
+  },
+  {
+    name:'은평뉴타운',units:1200,address:'서울시 은평구 진관동 45',
+    office:'02-5678-1234',manager:'최정아',
+    insurances:['CGL'],
+    insuranceDetails:[
+      {type:'CGL',insurer:'DB손해보험',policy:'CGL-2026-EPN-001',start:'2026-01-01',end:'2027-12-31',limit:'15억원',deductible:'50만원'}
+    ],
+    cases:22,warrantyStatus:[{item:'구조체',end:'2027-09-01',remain:'1년 6개월'},{item:'방수',end:'2026-09-01',remain:'6개월'},{item:'마감',end:'2026-06-01',remain:'3개월'}]
+  },
+  {
+    name:'송도더샵',units:3800,address:'인천시 연수구 송도대로 200',
+    office:'032-9012-3456',manager:'정현우',
+    insurances:['CGL','주택화재','재물'],
+    insuranceDetails:[
+      {type:'CGL',insurer:'메리츠화재',policy:'CGL-2026-SDS-001',start:'2026-01-01',end:'2027-12-31',limit:'35억원',deductible:'50만원'},
+      {type:'주택화재',insurer:'삼성화재',policy:'HF-2026-SDS-002',start:'2026-01-01',end:'2026-12-31',limit:'세대당 1억원',deductible:'10만원'},
+      {type:'재물',insurer:'KB손해보험',policy:'PR-2026-SDS-003',start:'2026-01-01',end:'2026-12-31',limit:'60억원',deductible:'10만원'}
+    ],
+    cases:40,warrantyStatus:[{item:'구조체',end:'2031-01-01',remain:'4년 9개월'},{item:'방수',end:'2030-01-01',remain:'3년 9개월'},{item:'마감',end:'2029-01-01',remain:'2년 9개월'}]
+  }
 ];
 
 var inspData = {
@@ -887,26 +984,98 @@ var inspData = {
 
 // ====== NAV ======
 var currentPage = 'dashboard';
-function go(page){
+var menuPages=['dashboard','all','complex','typeA','typeB','typeC','estimation','inspection','costdb','insurance','subrogation'];
+
+function go(page, highlightId){
   currentPage = page;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   var el = document.getElementById('page-'+page);
   if(el) el.classList.add('active');
   document.querySelectorAll('.sidebar-menu li').forEach(function(li,i){
     li.classList.remove('active');
-    var pages=['dashboard','all','typeA','typeB','typeC','estimation','inspection','costdb','insurance','subrogation'];
-    if(pages[i]===page) li.classList.add('active');
+    if(menuPages[i]===page) li.classList.add('active');
   });
   if(page==='all') renderAllCases();
   if(page==='inspection') renderInspection('대기');
+  if(page==='typeA') renderTypeA();
+  if(page==='typeB') renderTypeB();
+  if(page==='typeC') renderTypeC();
+  if(page==='complex') renderComplex();
   // close mobile sidebar
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
+  // scroll to top
+  window.scrollTo(0,0);
+  // Run counter animations
+  setTimeout(animateCounters, 100);
+  // Highlight specific case if requested
+  if(highlightId){
+    setTimeout(function(){ highlightCase(highlightId); }, 200);
+  }
+}
+
+function goToCase(caseId, type){
+  if(type==='A') go('typeA', caseId);
+  else if(type==='B') go('typeB', caseId);
+  else if(type==='C') go('typeC', caseId);
+}
+
+function highlightCase(id){
+  var el = document.querySelector('[data-case-id="'+id+'"]');
+  if(el){
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.style.transition='box-shadow .3s';
+    el.style.boxShadow='0 0 0 3px #FF6B35';
+    setTimeout(function(){ el.style.boxShadow=''; }, 2000);
+  }
 }
 
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('overlay').classList.toggle('show');
+}
+
+// ====== COUNTER ANIMATION ======
+function animateCounters(){
+  document.querySelectorAll('[data-counter]').forEach(function(el){
+    if(el.dataset.animated) return;
+    el.dataset.animated='1';
+    var target = parseInt(el.dataset.counter);
+    var format = el.dataset.format;
+    var duration = 800;
+    var start = 0;
+    var startTime = null;
+    function step(timestamp){
+      if(!startTime) startTime=timestamp;
+      var progress = Math.min((timestamp-startTime)/duration, 1);
+      var eased = 1-Math.pow(1-progress,3); // easeOutCubic
+      var current = Math.floor(eased*target);
+      if(format==='currency'){
+        el.textContent = current.toLocaleString('ko-KR');
+      } else {
+        el.textContent = current.toLocaleString('ko-KR');
+      }
+      if(progress<1) requestAnimationFrame(step);
+      else el.textContent = target.toLocaleString('ko-KR');
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+// ====== MODAL ======
+function openModal(html){
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e.target===document.getElementById('modalOverlay')){
+    closeModalDirect();
+  }
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.body.style.overflow='';
 }
 
 // ====== ALL CASES ======
@@ -944,11 +1113,9 @@ function renderAllCases(){
     c.photos.forEach(function(p){html+='<div class="exp-photo">'+p+'</div>';});
     html+='</div>';
     html+='<div style="display:flex;gap:8px;margin-top:12px;">';
-    if(c.type==='A') html+='<button class="btn btn-sm btn-outline-orange" onclick="go(\'typeA\')">TYPE A 상세</button>';
-    if(c.type==='B') html+='<button class="btn btn-sm btn-outline-orange" onclick="go(\'typeB\')">TYPE B 상세</button>';
-    if(c.type==='C') html+='<button class="btn btn-sm btn-outline-orange" onclick="go(\'typeC\')">TYPE C 상세</button>';
-    html+='<button class="btn btn-sm" onclick="go(\'estimation\')">적산 검토</button>';
-    html+='<button class="btn btn-sm" onclick="go(\'inspection\')">현장조사</button>';
+    html+='<button class="btn btn-sm btn-outline-orange" onclick="event.stopPropagation();goToCase(\''+c.id+'\',\''+c.type+'\')">TYPE '+c.type+' 상세</button>';
+    if(c.type==='C') html+='<button class="btn btn-sm" onclick="event.stopPropagation();go(\'estimation\')">적산 검토</button>';
+    html+='<button class="btn btn-sm" onclick="event.stopPropagation();go(\'inspection\')">현장조사</button>';
     html+='</div>';
     html+='</div></div>';
   });
@@ -961,14 +1128,291 @@ function toggleExp(el){
   body.classList.toggle('open');
 }
 
-// ====== TYPE B TABS ======
+// ====== TYPE A ======
+function renderTypeA(){
+  var html='';
+  typeAData.forEach(function(d){
+    var stClass = 'st-'+d.status;
+    var stepLabels = d.step===5 && d.lawsuit ? ['하자조사','감정평가','시공사 통보','협상/청구','소송'] : ['하자조사','감정평가','시공사 통보','협상/청구','완료'];
+    html+='<div class="exp-card" data-case-id="'+d.id+'" style="'+(d.lawsuit?'border-left:3px solid #DC2626;':'')+'">';
+    html+='<div class="exp-header" onclick="toggleExp(this)">';
+    html+='<div style="flex:1;">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">';
+    html+='<div><div style="font-size:16px;font-weight:700;">'+d.name+'</div>';
+    html+='<div style="font-size:12px;color:#888;margin-top:4px;">'+d.id+' | 하자보증 만료: '+d.warrantyEnd+'</div></div>';
+    html+='<span class="badge-status '+stClass+'">'+d.status+'</span>';
+    html+='</div>';
+    html+='<div style="font-size:13px;"><span style="color:#888;">하자 건수:</span> <b>'+d.defects.length+'건</b> | <span style="color:#888;">감정 금액:</span> <b>'+d.totalAmount+'원</b></div>';
+    // Mini tracker
+    html+='<div class="tracker" style="margin:8px 0 0;">';
+    for(var s=1;s<=5;s++){
+      var cls = s<d.step?'done':s===d.step?'current':'';
+      html+='<div class="tracker-step '+cls+'"><div class="tracker-dot">'+s+'</div><span>'+stepLabels[s-1]+'</span></div>';
+      if(s<5) html+='<div class="tracker-line '+(s<d.step?'done':'')+'"></div>';
+    }
+    html+='</div>';
+    html+='</div>';
+    html+='<span style="color:#aaa;font-size:20px;margin-left:12px;">&#9662;</span>';
+    html+='</div>';
+    // Expanded body
+    html+='<div class="exp-body">';
+    // Defect table
+    html+='<div class="detail-section"><div class="detail-section-title">하자 목록</div>';
+    html+='<table><thead><tr><th>하자유형</th><th>위치</th><th>발견일</th><th>감정금액</th><th>상태</th></tr></thead><tbody>';
+    d.defects.forEach(function(def){
+      html+='<tr><td>'+def.type+'</td><td>'+def.location+'</td><td>'+def.found+'</td><td>'+def.amount+'원</td><td><span class="badge-status st-'+(def.status==='감정중'?'조사중':def.status==='감정완료'?'산출완료':def.status==='소송중'?'소송진행':def.status==='청구완료'?'청구완료':'접수')+'">'+def.status+'</span></td></tr>';
+    });
+    html+='</tbody></table></div>';
+    // Builder info
+    html+='<div class="detail-section"><div class="detail-section-title">시공사 정보</div>';
+    html+='<div class="detail-grid">';
+    html+='<div class="label">시공사</div><div class="value">'+d.builder+'</div>';
+    html+='<div class="label">연락처</div><div class="value">'+d.builderContact+'</div>';
+    html+='<div class="label">하자보증 만료일</div><div class="value" style="'+(new Date(d.warrantyEnd)<new Date()?'color:#DC2626;font-weight:600;':'')+'">'+d.warrantyEnd+(new Date(d.warrantyEnd)<new Date()?' (경과)':'')+'</div>';
+    html+='</div></div>';
+    if(d.lawsuit){
+      html+='<div style="padding:12px 16px;background:#FEF2F2;border-radius:10px;margin-bottom:16px;font-size:13px;color:#DC2626;font-weight:600;">소송 진행 중 — '+d.lawsuit+'</div>';
+    }
+    // Photos placeholder
+    html+='<div class="detail-section"><div class="detail-section-title">감정서 / 증거사진</div>';
+    html+='<div class="exp-photos">';
+    html+='<div class="exp-photo">감정서 1</div><div class="exp-photo">증거사진 1</div><div class="exp-photo">증거사진 2</div><div class="exp-photo">증거사진 3</div>';
+    html+='</div></div>';
+    // Action buttons
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+    html+='<button class="btn btn-sm btn-primary" onclick="event.stopPropagation();alert(\'시공사 통보 발송\\n\\n'+d.builder+'\\n'+d.builderContact+'\\n\\n하자 내용: '+d.defects.length+'건\\n감정 금액: '+d.totalAmount+'원\\n\\n내용증명 발송 예정\')">시공사 통보</button>';
+    html+='<button class="btn btn-sm btn-blue" onclick="event.stopPropagation();alert(\'협상 기록\\n\\n'+d.name+'\\n\\n기존 협상 이력:\\n- 1차 통보: 회신 대기\\n- 추가 협상 진행 가능\')">협상 기록</button>';
+    html+='<button class="btn btn-sm btn-green" onclick="event.stopPropagation();alert(\'청구서 발송\\n\\n'+d.builder+'\\n감정 금액: '+d.totalAmount+'원\\n\\n하자보수 이행 청구서가 발송됩니다.\')">청구서 발송</button>';
+    html+='</div>';
+    html+='</div></div>';
+  });
+  document.getElementById('typeAList').innerHTML=html;
+}
+
+// ====== TYPE B ======
+function renderTypeB(){
+  var html='';
+  typeBData.forEach(function(d){
+    var flowSteps = ['AI판정','면책통보','이의신청','재검토','최종종결'];
+    html+='<div class="exp-card typeB-card" data-reason="'+d.reason+'" data-case-id="'+d.id+'">';
+    html+='<div class="exp-header" onclick="toggleExp(this)">';
+    html+='<div style="flex:1;">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">';
+    html+='<div><div style="font-size:15px;font-weight:700;">'+d.name+' - '+d.defect+'</div>';
+    html+='<div style="font-size:12px;color:#888;margin-top:4px;">'+d.id+' | 면책 사유: <b>'+d.reason+'</b></div></div>';
+    html+='<div style="display:flex;gap:8px;align-items:center;">';
+    html+='<span class="badge-status st-'+d.opinionStatus+'">의견서: '+d.opinionStatus+'</span>';
+    html+='<span class="badge badge-b">TYPE B</span>';
+    html+='</div></div>';
+    if(d.objectionDeadline){
+      html+='<div style="margin-top:6px;"><span class="countdown">이의신청 기한: '+d.objectionDeadline+'</span></div>';
+    }
+    // Mini flow
+    html+='<div class="flow" style="margin:8px 0 0;">';
+    for(var s=0;s<5;s++){
+      html+='<div class="flow-step '+(s<d.flowStep?'active':'')+'">'+flowSteps[s]+'</div>';
+      if(s<4) html+='<div class="flow-arrow">&#8594;</div>';
+    }
+    html+='</div>';
+    html+='</div>';
+    html+='<span style="color:#aaa;font-size:20px;margin-left:12px;">&#9662;</span>';
+    html+='</div>';
+    // Expanded body
+    html+='<div class="exp-body">';
+    // Detail info
+    html+='<div class="detail-section"><div class="detail-section-title">면책 사유 상세</div>';
+    html+='<div class="detail-grid">';
+    html+='<div class="label">약관 조항</div><div class="value">'+d.article+'</div>';
+    html+='<div class="label">상세 사유</div><div class="value">'+d.articleDetail+'</div>';
+    html+='</div></div>';
+    // Opinion status
+    html+='<div class="detail-section"><div class="detail-section-title">의견서 발송</div>';
+    html+='<div class="detail-grid">';
+    html+='<div class="label">발송일</div><div class="value">'+(d.opinionDate||'<span style="color:#DC2626;">미발송</span>')+'</div>';
+    html+='<div class="label">발송 상태</div><div class="value"><span class="badge-status st-'+d.opinionStatus+'">'+d.opinionStatus+'</span></div>';
+    html+='</div></div>';
+    // Objection
+    if(d.objection || d.objectionDeadline){
+      html+='<div class="detail-section"><div class="detail-section-title">이의신청</div>';
+      html+='<div class="detail-grid">';
+      if(d.objection){
+        html+='<div class="label">이의 내용</div><div class="value">'+d.objection+'</div>';
+      }
+      if(d.objectionDeadline){
+        html+='<div class="label">잔여 기한</div><div class="value"><span class="countdown">'+d.objectionDeadline+'</span></div>';
+      }
+      html+='</div></div>';
+    }
+    // Review
+    if(d.review){
+      html+='<div class="detail-section"><div class="detail-section-title">재검토 결과</div>';
+      html+='<div style="font-size:13px;padding:12px 16px;background:#f9fafb;border-radius:10px;">'+d.review+'</div>';
+      html+='</div>';
+    }
+    // Actions
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+    if(d.opinionStatus==='미발송'){
+      html+='<button class="btn btn-sm btn-primary" onclick="event.stopPropagation();alert(\'의견서 발송\\n\\n'+d.name+' - '+d.defect+'\\n면책 사유: '+d.reason+'\\n약관: '+d.article+'\\n\\n의견서가 발송됩니다.\')">의견서 발송</button>';
+    }
+    html+='<button class="btn btn-sm btn-outline-orange" onclick="event.stopPropagation();alert(\'의견서 관리\\n\\n'+d.name+'\\n\\n- 의견서 상세 조회\\n- 발송 이력 확인\\n- 재발송 가능\')">의견서 관리</button>';
+    html+='<button class="btn btn-sm" onclick="event.stopPropagation();alert(\'면책 근거 상세\\n\\n약관: '+d.article+'\\n'+d.articleDetail+'\\n\\n관련 판례 및 금감원 유권해석 포함\')">면책 근거 상세</button>';
+    html+='</div>';
+    html+='</div></div>';
+  });
+  document.getElementById('typeBList').innerHTML=html;
+}
+
+var currentTypeBTab='all';
 function switchTypeBTab(reason){
+  currentTypeBTab=reason;
   document.querySelectorAll('#typeBTabs .tab').forEach(function(t){t.classList.remove('active');});
   event.target.classList.add('active');
   document.querySelectorAll('.typeB-card').forEach(function(card){
     if(reason==='all'){card.style.display='block';}
     else{card.style.display=card.dataset.reason===reason?'block':'none';}
   });
+}
+
+// ====== TYPE C ======
+function renderTypeC(){
+  var html='';
+  typeCData.forEach(function(d){
+    var stClass = 'st-'+d.status;
+    html+='<div class="exp-card typeC-card" data-status="'+d.status+'" data-case-id="'+d.id+'">';
+    html+='<div class="exp-header" onclick="toggleExp(this)">';
+    html+='<div style="flex:1;">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">';
+    html+='<div><div style="font-size:15px;font-weight:700;">'+d.name+' '+d.dong+'</div>';
+    html+='<div style="font-size:12px;color:#888;margin-top:4px;">'+d.id+' | '+d.defect+' | 보험: '+d.insurance+' ('+d.insurerName+')</div></div>';
+    html+='<div style="display:flex;gap:8px;align-items:center;">';
+    html+='<span style="font-weight:700;color:#FF6B35;">'+d.totalAmount+'원</span>';
+    html+='<span class="badge-status '+stClass+'">'+d.status+'</span>';
+    html+='</div></div>';
+    // Mini amounts
+    html+='<div style="display:flex;gap:20px;font-size:12px;color:#888;margin-top:4px;">';
+    html+='<span>소유자: <b style="color:#111;">'+d.ownerAmt+'원</b></span>';
+    html+='<span>임차인: <b style="color:#111;">'+d.tenantAmt+'원</b></span>';
+    html+='</div>';
+    html+='</div>';
+    html+='<span style="color:#aaa;font-size:20px;margin-left:12px;">&#9662;</span>';
+    html+='</div>';
+    // Expanded body
+    html+='<div class="exp-body">';
+    // Estimation table
+    html+='<div class="detail-section"><div class="detail-section-title">AI 적산 결과 (공종별)</div>';
+    html+='<table><thead><tr><th>공종</th><th>수량</th><th>단위</th><th>단가 (원)</th><th>금액 (원)</th></tr></thead><tbody>';
+    d.estimation.forEach(function(e){
+      html+='<tr><td>'+e.work+'</td><td>'+e.qty+'</td><td>'+e.unit+'</td><td>'+e.price.toLocaleString()+'</td><td>'+e.amount.toLocaleString()+'</td></tr>';
+    });
+    html+='</tbody><tfoot><tr style="font-weight:700;background:#f9fafb;"><td colspan="4">합계</td><td>'+d.totalAmount+'</td></tr></tfoot></table>';
+    html+='</div>';
+    // Owner/Tenant split
+    html+='<div class="detail-section"><div class="detail-section-title">소유자/임차인 분리 금액</div>';
+    html+='<div class="card-grid card-grid-2" style="margin:0;">';
+    html+='<div style="padding:12px 16px;background:#f9fafb;border-radius:10px;text-align:center;">';
+    html+='<div style="font-size:12px;color:#888;">소유자 부담</div>';
+    html+='<div style="font-size:20px;font-weight:700;margin-top:4px;">'+d.ownerAmt+'원</div></div>';
+    html+='<div style="padding:12px 16px;background:#f9fafb;border-radius:10px;text-align:center;">';
+    html+='<div style="font-size:12px;color:#888;">임차인 부담</div>';
+    html+='<div style="font-size:20px;font-weight:700;margin-top:4px;">'+d.tenantAmt+'원</div></div>';
+    html+='</div></div>';
+    // Insurance info
+    html+='<div class="detail-section"><div class="detail-section-title">보험 적용</div>';
+    html+='<div class="detail-grid">';
+    html+='<div class="label">적용 보험</div><div class="value"><span class="ins-tag ins-'+(d.insurance==='CGL'?'cgl':d.insurance==='재물보험'?'prop':'fire')+'">'+d.insurance+'</span></div>';
+    html+='<div class="label">보험사</div><div class="value">'+d.insurerName+'</div>';
+    html+='<div class="label">승인 상태</div><div class="value"><span class="badge-status st-'+d.status+'">'+d.approval+'</span></div>';
+    html+='</div></div>';
+    // Payment history
+    if(d.payments && d.payments.length>0){
+      html+='<div class="detail-section"><div class="detail-section-title">지급 이력</div>';
+      html+='<table><thead><tr><th>지급일</th><th>금액</th><th>방법</th></tr></thead><tbody>';
+      d.payments.forEach(function(p){
+        html+='<tr><td>'+p.date+'</td><td>'+p.amount+'원</td><td>'+p.method+'</td></tr>';
+      });
+      html+='</tbody></table></div>';
+    }
+    // Actions
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+    html+='<button class="btn btn-sm btn-primary" onclick="event.stopPropagation();go(\'estimation\')">적산 상세</button>';
+    html+='<button class="btn btn-sm btn-blue" onclick="event.stopPropagation();go(\'insurance\')">보험 연계</button>';
+    if(d.status!=='지급완료'){
+      html+='<button class="btn btn-sm btn-green" onclick="event.stopPropagation();alert(\'손해사정사 승인 요청\\n\\n'+d.name+' '+d.dong+'\\n산출액: '+d.totalAmount+'원\\n보험: '+d.insurance+' ('+d.insurerName+')\\n\\n승인 요청이 전송됩니다.\')">승인 요청</button>';
+    }
+    html+='</div>';
+    html+='</div></div>';
+  });
+  document.getElementById('typeCList').innerHTML=html;
+}
+
+var currentTypeCTab='all';
+function switchTypeCTab(status){
+  currentTypeCTab=status;
+  document.querySelectorAll('#typeCTabs .tab').forEach(function(t){t.classList.remove('active');});
+  event.target.classList.add('active');
+  document.querySelectorAll('.typeC-card').forEach(function(card){
+    if(status==='all'){card.style.display='block';}
+    else{
+      var cardStatus = card.dataset.status;
+      // Map similar statuses
+      if(status==='적산중' && (cardStatus==='조사중'||cardStatus==='적산중')) card.style.display='block';
+      else if(status==='지급완료' && (cardStatus==='완료'||cardStatus==='지급완료')) card.style.display='block';
+      else card.style.display=cardStatus===status?'block':'none';
+    }
+  });
+}
+
+// ====== COMPLEX (단지) ======
+function renderComplex(){
+  var html='';
+  complexData.forEach(function(c,idx){
+    html+='<div class="exp-card">';
+    html+='<div class="exp-header" onclick="toggleExp(this)">';
+    html+='<div style="flex:1;">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">';
+    html+='<div><div style="font-size:16px;font-weight:700;">'+c.name+'</div>';
+    html+='<div style="font-size:12px;color:#888;margin-top:4px;">'+c.address+' | '+c.units.toLocaleString()+'세대 | 관리소장: '+c.manager+'</div></div>';
+    html+='<div style="display:flex;gap:4px;align-items:center;">';
+    c.insurances.forEach(function(ins){
+      var cls = ins==='CGL'?'ins-cgl':ins==='주택화재'?'ins-fire':'ins-prop';
+      html+='<span class="ins-tag '+cls+'">'+ins+'</span>';
+    });
+    html+='</div></div>';
+    html+='<div style="display:flex;gap:20px;font-size:12px;color:#888;margin-top:4px;">';
+    html+='<span>접수 건수: <b style="color:#FF6B35;">'+c.cases+'건</b></span>';
+    html+='<span>관리사무소: <b style="color:#111;">'+c.office+'</b></span>';
+    html+='</div>';
+    html+='</div>';
+    html+='<span style="color:#aaa;font-size:20px;margin-left:12px;">&#9662;</span>';
+    html+='</div>';
+    // Expanded body
+    html+='<div class="exp-body">';
+    // Insurance details
+    html+='<div class="detail-section"><div class="detail-section-title">가입 보험 상세</div>';
+    html+='<table><thead><tr><th>보험 유형</th><th>보험사</th><th>증권번호</th><th>보험기간</th><th>보상한도</th><th>자기부담금</th></tr></thead><tbody>';
+    c.insuranceDetails.forEach(function(ins){
+      html+='<tr><td><span class="ins-tag ins-'+(ins.type==='CGL'?'cgl':ins.type==='주택화재'?'fire':'prop')+'">'+ins.type+'</span></td>';
+      html+='<td>'+ins.insurer+'</td><td>'+ins.policy+'</td><td>'+ins.start+' ~ '+ins.end+'</td>';
+      html+='<td>'+ins.limit+'</td><td>'+ins.deductible+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    // Cases count
+    html+='<div class="detail-section"><div class="detail-section-title">접수 현황</div>';
+    html+='<div style="padding:16px;background:#f9fafb;border-radius:10px;font-size:14px;">';
+    html+='해당 단지 접수 건수: <b style="color:#FF6B35;font-size:18px;">'+c.cases+'건</b>';
+    html+='</div></div>';
+    // Warranty status
+    html+='<div class="detail-section"><div class="detail-section-title">하자보증기간 현황</div>';
+    html+='<table><thead><tr><th>보증 항목</th><th>만료일</th><th>잔여 기간</th></tr></thead><tbody>';
+    c.warrantyStatus.forEach(function(w){
+      var isExpiring = w.remain.indexOf('개월')!==-1 && !w.remain.match(/\d+년/);
+      html+='<tr><td>'+w.item+'</td><td>'+w.end+'</td>';
+      html+='<td style="'+(isExpiring?'color:#DC2626;font-weight:600;':'')+'">'+w.remain+(isExpiring?' ⚠️':'')+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    html+='</div></div>';
+  });
+  document.getElementById('complexList').innerHTML=html;
 }
 
 // ====== INSPECTION ======
@@ -983,7 +1427,7 @@ function renderInspection(tab){
   var items=inspData[tab]||[];
   var html='';
   items.forEach(function(item){
-    html+='<div class="card" style="margin-bottom:12px;">';
+    html+='<div class="card card-hover" style="margin-bottom:12px;">';
     html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">';
     html+='<div>';
     html+='<div style="font-size:15px;font-weight:600;">'+item.name+' '+item.dong+'</div>';
@@ -1010,7 +1454,7 @@ function renderInspection(tab){
       html+='<div class="exp-photo">완료 사진 2</div>';
       html+='<div class="exp-photo">완료 사진 3</div>';
       html+='</div>';
-      html+='<div style="margin-top:8px;font-size:13px;"><b>소견서:</b> <span style="color:#16A34A;">제출 완료</span></div>';
+      html+='<div style="margin-top:8px;font-size:13px;"><b>소견서:</b> <span style="color:#059669;">제출 완료</span></div>';
     }
     html+='</div>';
   });
@@ -1029,7 +1473,11 @@ function filterCost(){
 
 // ====== INIT ======
 window.addEventListener('DOMContentLoaded',function(){
-  // default page
+  animateCounters();
+  renderTypeA();
+  renderTypeB();
+  renderTypeC();
+  renderComplex();
 });
 </script>
 </body>
